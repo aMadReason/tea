@@ -16,7 +16,7 @@ class Game implements iGame {
   behaviourReg: Map<string, iBehaviour>;
   parserPatterns: Object;
 
-  constructor(things = [], locations = [], patterns = {}) {
+  constructor(things: Array<iThing> = [], locations: Array<iThing> = [], patterns = {}) {
     this.behaviourReg = new Map();
     this.locations = locations;
     this.things = things;

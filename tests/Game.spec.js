@@ -1,4 +1,4 @@
-import { Game, ThingMaker } from "../index";
+import { Game, ThingMaker } from "../dist/index.js";
 import {
   help,
   examine,
@@ -6,7 +6,7 @@ import {
   take,
   goTo,
   usePortal
-} from "../behaviours/index";
+} from "../dist/behaviours/index.js";
 import { gamedata } from "./gamedata";
 
 const behaviours = [help, examine, describe, take, goTo, usePortal];

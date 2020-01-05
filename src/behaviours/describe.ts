@@ -1,12 +1,12 @@
-import { iThing, iBehaviour, iCommand } from "../index";
+import { iThing, iBehaviour, iCommand, iProperties } from "../index";
 // gives brief description of thing depending on its state.
 
 const describe: iBehaviour = {
   name: "describe",
   properties: {
-    stateKey: "default",
-    descriptions: {
-      default: "It's a {name}"
+    "stateKey": "default",
+    "descriptions": {
+      "default": "It's a {name}"
     }
   },
   methods: {

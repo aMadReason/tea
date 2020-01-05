@@ -1,5 +1,5 @@
-import { Thing } from "../index";
-import { describe } from "../behaviours/index";
+import { Thing } from "../dist/index";
+import { describe } from "../dist/behaviours/index";
 
 test("Initialise a Thing", () => {
   const t = new Thing({

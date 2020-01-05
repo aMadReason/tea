@@ -1,5 +1,5 @@
-import { ThingMaker } from "../index";
-import { describe, help, examine } from "../behaviours/index";
+import { ThingMaker } from "../dist/index.js";
+import { describe, help, examine } from "../dist/behaviours/index.js";
 
 const behaviourReg = new Map();
 behaviourReg.set(describe.name, describe);

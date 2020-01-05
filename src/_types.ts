@@ -48,6 +48,7 @@ export interface iGame {
   addThing(data: iThing): void;
   getActiveLocation(): iThing;
   setLocationByKey(key: string): void;
+  getLocationByKey(key: string): iThing;
 }
 
 export interface iThing {
@@ -55,19 +56,19 @@ export interface iThing {
   noun: string;
   described: string;
   name: string;
-  locationKey?: string;
-  game?: iGame;
-  pubsub?: iPubsub;
+  locationKey?: string | null;
+  game?: iGame | null;
+  pubsub?: iPubsub | null;
   behaviours?: Array<string>;
   methods: Map<string, behaviourMethod>;
-  properties: Map<string, string | iProperties<string>>;
+  properties: Map<string, string | iProperties<string | Array<string> | iProperties<string>>>;
   actions: Map<string, string>; // maps verbs to method key
   setLocationKey(key: string): void;
   setProp(
     key: string,
-    value: string | iProperties<string> | Array<string>
+    value: string | iProperties<string | Array<string> | iProperties<string>> | Array<string>
   ): void;
-  getProp(key: string): string | iProperties<string> | Array<string>;
+  getProp(key: string): string | Array<string> | iProperties<string | Array<string> | iProperties<string>>;
   setMethod(key: string, value: behaviourMethod): void;
   getMethod(key: string, cmd: iCommand): behaviourMethod;
   setAction(key: string, value: string): void;

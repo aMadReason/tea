@@ -2,7 +2,7 @@ const pubsub = {
   subs: new Map(),
   publish(event: string, data: any): void {
     if (!this.subs[event]) return;
-    this.subs[event].forEach(subCallback => subCallback(data));
+    this.subs[event].forEach((subCallback: Function) => subCallback(data));
   },
   subscribe(event: string, callback: Function) {
     if (!this.subs[event]) this.subs[event] = [];

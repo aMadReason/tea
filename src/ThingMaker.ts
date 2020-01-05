@@ -1,5 +1,5 @@
 import { Thing, iThing, iBehaviour } from "./index";
-import { help, describe, examine } from "./behaviours";
+import { help, describe, examine } from "./behaviours/index";
 import { iThingData, iGame } from "./_types";
 
 export const defaultBehaviours = [describe, help, examine];

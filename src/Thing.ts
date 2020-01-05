@@ -22,18 +22,17 @@ class Thing implements iThing {
   constructor({
     noun = "",
     described = "",
-    locationKey = null,
+    locationKey = "",
     properties = {},
     game = null,
-    pubsub = null,
     key = genId()
   }) {
     this.noun = noun;
     this.described = described;
-    this.locationKey = locationKey;
+    this.locationKey = locationKey || null;
     this.name = this.described || this.noun;
     this.key = key;
-    this.game = game;
+    this.game = game || null;
 
     Object.keys(properties).map(k => this.setProp(k, properties[k]));
 

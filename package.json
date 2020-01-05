@@ -2,16 +2,23 @@
   "name": "tea",
   "version": "1.0.0",
   "description": "",
-  "main": "index.html",
+  "main": "index.js",
   "scripts": {
-    "start": "parcel index.html --open",
-    "build": "parcel build index.html"
+    "compile": "tsc",
+    "test": "jest"
   },
   "dependencies": {
     "compromise": "12.2.1"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.6.1"
+    "@babel/preset-env": "^7.7.7",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0"
   },
-  "keywords": []
+  "keywords": [],
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  }
 }

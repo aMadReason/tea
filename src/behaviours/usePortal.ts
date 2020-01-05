@@ -8,10 +8,10 @@ const behaviour = {
   },
   methods: {
     use(ins: Thing): String {
-      const locationKey = ins.getProp("portalTo");
+      const locationKey = ins.getProp("portalTo").toString();
       const location = ins.game.getLocationByKey(locationKey);
       if (!location) return ins.getProp("badPortalMsg").toString();
-      ins.game.setLocationByKey(location.key);
+      ins.game.setLocationByKey(locationKey);
       return `Moved to ${location.name}.`;
     }
   },

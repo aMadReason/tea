@@ -1,16 +1,28 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "jsx": "preserve",
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "allowJs": true,
+    "target": "es6",
     "lib": [
       "es6",
-      "dom"
+      "dom",
+      "es2015"
     ],
-    "rootDir": "src",
     "moduleResolution": "node",
-    "downlevelIteration": true
-  }
+    "noImplicitAny": false,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": false,
+    "outDir": "dist",
+    "downlevelIteration": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "**/*.spec.ts"
+  ]
 }
