@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const pubsub = {
     subs: new Map(),
     publish(event, data) {
@@ -14,4 +12,4 @@ const pubsub = {
         return { unsubscribe: () => this.subs[event].splice(index, 1) };
     }
 };
-exports.default = pubsub;
+export default pubsub;

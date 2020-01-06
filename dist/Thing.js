@@ -1,8 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const uuid_1 = require("./modules/uuid");
+import { genId } from "./modules/uuid";
 class Thing {
-    constructor({ noun = "", described = "", locationKey = "", properties = {}, game = null, key = uuid_1.genId() }) {
+    constructor({ noun = "", described = "", locationKey = "", properties = {}, game = null, key = genId() }) {
         this.locationKey = "";
         this.noun = "";
         this.described = "";
@@ -64,4 +62,4 @@ class Thing {
         return this;
     }
 }
-exports.default = Thing;
+export default Thing;

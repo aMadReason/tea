@@ -1,9 +1,4 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const compromise_1 = __importDefault(require("compromise"));
+import nlp from "compromise";
 const normalizeRules = {
     whitespace: true,
     case: true,
@@ -35,10 +30,10 @@ const defaultPatterns = {
     "#Verb (#Determiner|#Preposition)? #Adjective+? #Noun #Join? (#Determiner|#Preposition)? #Adjective+? #Noun": "ParserComplex",
     "#Verb (#Determiner|#Preposition)? #Adjective+? #Noun": "ParserSimple"
 };
-function commandParser(input, patterns = {}) {
+export default function commandParser(input, patterns = {}) {
     const words = Object.assign(Object.assign({}, defaultPatterns), patterns);
     const inputNoStop = input.replace(/\.+$/, "");
-    const doc = compromise_1.default(inputNoStop, words)
+    const doc = nlp(inputNoStop, words)
         .clone()
         .normalize(normalizeRules);
     Object.keys(words).map(p => doc.match(p).tag(words[p]));
@@ -104,4 +99,3 @@ function commandParser(input, patterns = {}) {
         command
     };
 }
-exports.default = commandParser;

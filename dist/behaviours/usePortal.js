@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const behaviour = {
     name: "usePortal",
     properties: {
@@ -21,4 +19,4 @@ const behaviour = {
     }
 };
 Object.freeze(behaviour);
-exports.default = behaviour;
+export default behaviour;

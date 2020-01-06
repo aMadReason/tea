@@ -1,11 +1,6 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const pubsub_1 = __importDefault(require("./modules/pubsub"));
-const commandParser_1 = __importDefault(require("./modules/commandParser"));
-const index_1 = require("./index");
+import pubsub from "./modules/pubsub";
+import commandParser from "./modules/commandParser";
+import { ThingMaker, defaultBehaviours } from "./index";
 const events = {
     locationChange: "tea-location-change",
     commandCall: "tea-command"
@@ -19,7 +14,7 @@ class Game {
         this.locations = locations;
         this.things = things;
         this.parserPatterns = patterns;
-        index_1.defaultBehaviours.map(b => this.registerBehaviour(b));
+        defaultBehaviours.map(b => this.registerBehaviour(b));
     }
     registerBehaviour(behaviour) {
         this.behaviourReg.set(behaviour.name, behaviour);
@@ -29,10 +24,10 @@ class Game {
         return this.behaviourReg;
     }
     subscribe(eventName, callback) {
-        return pubsub_1.default.subscribe(eventName, callback);
+        return pubsub.subscribe(eventName, callback);
     }
     preThingAdd(data) {
-        const defaultBehaviors = index_1.defaultBehaviours.map(i => i.name);
+        const defaultBehaviors = defaultBehaviours.map(i => i.name);
         const dataBehaviours = data.behaviours || [];
         const behaviours = [...new Set([...defaultBehaviors, ...dataBehaviours])];
         const processedData = Object.assign(Object.assign({}, data), { behaviours });
@@ -58,11 +53,11 @@ class Game {
         const to = this.getLocationByKey(key);
         if (!from && to) {
             this.location = to.key;
-            return pubsub_1.default.publish(events.locationChange, { from, to });
+            return pubsub.publish(events.locationChange, { from, to });
         }
         if (to && to.key !== from.key) {
             this.location = to.key;
-            return pubsub_1.default.publish(events.locationChange, { from, to });
+            return pubsub.publish(events.locationChange, { from, to });
         }
         if (!to && locations.length > 0) {
             return (this.location = locations[0].key);
@@ -90,13 +85,13 @@ class Game {
         const { locations, things, location = null } = data;
         if (Array.isArray(locations)) {
             locations.map(i => {
-                const loc = index_1.ThingMaker.make(i, this.behaviourReg, this);
+                const loc = ThingMaker.make(i, this.behaviourReg, this);
                 return this.addLocation(loc);
             });
         }
         if (Array.isArray(things)) {
             things.map(i => {
-                const thing = index_1.ThingMaker.make(i, this.behaviourReg, this);
+                const thing = ThingMaker.make(i, this.behaviourReg, this);
                 return this.addThing(thing);
             });
         }
@@ -128,7 +123,7 @@ class Game {
     }
     parseCommand(cmd, patterns = this.parserPatterns) {
         const msg = [];
-        const parserResult = commandParser_1.default(cmd.toLocaleLowerCase(), patterns);
+        const parserResult = commandParser(cmd.toLocaleLowerCase(), patterns);
         const { nouns, verbs, described } = parserResult;
         const verb = verbs[0];
         const locations = this.getLocationsByNoun(nouns[0], described[0]);
@@ -192,8 +187,8 @@ class Game {
             response = () => msg.join(" ");
         }
         const res = Object.assign(Object.assign({}, cmd), { valid, response });
-        pubsub_1.default.publish(events.commandCall, res);
+        pubsub.publish(events.commandCall, res);
         return res;
     }
 }
-exports.default = Game;
+export default Game;

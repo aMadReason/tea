@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const examine = {
     name: "examine",
     properties: {
@@ -24,4 +22,4 @@ const examine = {
     }
 };
 Object.freeze(examine);
-exports.default = examine;
+export default examine;

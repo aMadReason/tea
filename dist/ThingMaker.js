@@ -1,11 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = require("./index");
-const index_2 = require("./behaviours/index");
-exports.defaultBehaviours = [index_2.describe, index_2.help, index_2.examine];
+import { Thing } from "./index";
+import { help, describe, examine } from "./behaviours/index";
+export const defaultBehaviours = [describe, help, examine];
 class ThingMaker {
     static preProcess(data) {
-        const defaultBehaviors = exports.defaultBehaviours.map(i => i.name);
+        const defaultBehaviors = defaultBehaviours.map(i => i.name);
         const dataBehaviours = data.behaviours || [];
         const behaviours = [...new Set([...defaultBehaviors, ...dataBehaviours])];
         const processedData = Object.assign(Object.assign({}, data), { behaviours });
@@ -14,7 +12,7 @@ class ThingMaker {
     static make(data, behaviourReg, game) {
         const processedData = ThingMaker.preProcess(data);
         const { noun, described, behaviours, locationKey, key, properties } = processedData;
-        const thing = new index_1.Thing({
+        const thing = new Thing({
             noun,
             properties,
             described,
@@ -33,4 +31,4 @@ class ThingMaker {
         return thing;
     }
 }
-exports.default = ThingMaker;
+export default ThingMaker;

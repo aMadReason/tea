@@ -1,11 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const howler_1 = require("howler");
-class HowlerChannel {
+import { Howl, Howler } from "howler";
+export default class HowlerChannel {
     constructor(options = {}) {
         const { fade = false, duration = 2000, volume = false } = options;
         this.sounds = [];
-        this.volume = volume || howler_1.Howler.volume();
+        this.volume = volume || Howler.volume();
         this.fade = fade;
         this.duration = duration;
         return this;
@@ -23,7 +21,7 @@ class HowlerChannel {
         const sound = Object.assign({}, soundData);
         if (this.get(sound.key))
             return;
-        const howl = new howler_1.Howl(Object.assign(Object.assign({}, soundData), { onplayerror() {
+        const howl = new Howl(Object.assign(Object.assign({}, soundData), { onplayerror() {
                 if (soundData.autoplay)
                     howl.once("unlock", () => howl.play());
             }, onplay: () => (this.get(sound.key).playing = true), onend: () => (this.get(sound.key).playing = false), onstop: () => (this.get(sound.key).playing = false), onfade: () => howl.volume() === 0 && howl.stop() }));
@@ -87,4 +85,3 @@ class HowlerChannel {
         sounds.map(i => this.play(i.key, { fade, duration }));
     }
 }
-exports.default = HowlerChannel;

@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const behaviour = {
     name: "help",
     properties: {
@@ -26,4 +24,4 @@ const behaviour = {
     }
 };
 Object.freeze(behaviour);
-exports.default = behaviour;
+export default behaviour;

@@ -1,10 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var Game_1 = require("./Game");
-exports.Game = Game_1.default;
-var Thing_1 = require("./Thing");
-exports.Thing = Thing_1.default;
-var ThingMaker_1 = require("./ThingMaker");
-exports.ThingMaker = ThingMaker_1.default;
-var ThingMaker_2 = require("./ThingMaker");
-exports.defaultBehaviours = ThingMaker_2.defaultBehaviours;
+export * from "./behaviours";
+export { default as Game } from "./Game";
+export { default as Thing } from "./Thing";
+export { default as ThingMaker } from "./ThingMaker";
+export { defaultBehaviours } from "./ThingMaker";
