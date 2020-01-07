@@ -31,11 +31,18 @@ class Thing {
     setMethod(key, value) {
         this.methods.set(key, value);
     }
+    hasMethod(key) {
+        return this.methods.has(key);
+    }
     getMethod(key, cmd) {
-        return () => this.methods.get(key)(this, cmd);
+        const method = this.methods.get(key);
+        return () => method(this, cmd);
     }
     setAction(key, value) {
         this.actions.set(key, value);
+    }
+    hasAction(key) {
+        return this.actions.has(key);
     }
     getAction(key, cmd = null) {
         const methodKey = this.actions.get(key);

@@ -70,8 +70,10 @@ export interface iThing {
   ): void;
   getProp(key: string): string | Array<string> | iProperties<string | Array<string> | iProperties<string>>;
   setMethod(key: string, value: behaviourMethod): void;
+  hasMethod(key: string): boolean;
   getMethod(key: string, cmd: iCommand): behaviourMethod;
   setAction(key: string, value: string): void;
+  hasAction(key: string): boolean;
   getAction(key: string, cmd?: iCommand): () => string;
   getActionKeys(): Array<string>;
 }

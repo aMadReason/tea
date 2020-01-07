@@ -55,12 +55,22 @@ class Thing implements iThing {
     this.methods.set(key, value);
   }
 
+  hasMethod(key) {
+    return this.methods.has(key);
+  }
+
   getMethod(key: string, cmd: iCommand) {
-    return () => this.methods.get(key)(this, cmd);
+    const method = this.methods.get(key);
+    //if(!method) return () => `Unable to `;
+    return () => method(this, cmd);
   }
 
   setAction(key: string, value: string) {
     this.actions.set(key, value);
+  }
+
+  hasAction(key) {
+    return this.actions.has(key);
   }
 
   getAction(key: string, cmd: iCommand = null) {

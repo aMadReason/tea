@@ -124,7 +124,7 @@ class Game {
     parseCommand(cmd, patterns = this.parserPatterns) {
         const msg = [];
         const parserResult = commandParser(cmd.toLocaleLowerCase(), patterns);
-        const { nouns, verbs, described } = parserResult;
+        const { nouns, verbs, described, command } = parserResult;
         const verb = verbs[0];
         const locations = this.getLocationsByNoun(nouns[0], described[0]);
         const firstThings = this.getThingsByNoun(nouns[0], described[0]);
@@ -142,6 +142,11 @@ class Game {
             complex: verb && fLength > 0 && sLength > 0
         };
         let type = Object.keys(cmdTypes).find(k => cmdTypes[k] && k) || false;
+        const simpleBadVerb = type === "simple" && fLength === 1 && !firstThings[0].hasAction(verb);
+        if (simpleBadVerb) {
+            type = "simpleBadVerb";
+            msg.push(`Unable to ${command}.`);
+        }
         const simpleDuplicate = type === "simple" &&
             fLength >= 2 &&
             firstThings[0].noun === firstThings[1].noun;
