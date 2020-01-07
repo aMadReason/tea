@@ -187,10 +187,6 @@ class Game {
             valid = true;
             response = inventoryThings[0].getAction(verb, cmd);
         }
-        if (msg && msg.length > 0) {
-            valid = false;
-            response = () => msg.join(" ");
-        }
         const res = Object.assign(Object.assign({}, cmd), { valid, response });
         pubsub.publish(events.commandCall, res);
         return res;

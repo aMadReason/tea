@@ -259,10 +259,10 @@ class Game implements iGame {
       response = inventoryThings[0].getAction(verb, cmd);
     }
 
-    if (msg && msg.length > 0) {
-      valid = false;
-      response = () => msg.join(" ");
-    }
+    // if (msg && msg.length > 0) {
+    //   valid = false;
+    //   response = () => msg.join(" ");
+    // }
 
     const res = { ...cmd, valid, response };
 
