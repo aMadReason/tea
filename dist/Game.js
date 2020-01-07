@@ -173,19 +173,25 @@ class Game {
     command(command, patterns = this.parserPatterns) {
         const cmd = this.parseCommand(command, patterns);
         const { verb, type, locations, firstThings, inventoryThings, strictCommand, msg } = cmd;
+        const hasMsg = msg.length > 0;
         let response = () => `Invalid command: "${strictCommand}"`;
         let valid = false;
-        if (type === "nav" && locations.length > 0) {
-            valid = true;
-            response = locations[0].getAction(verb, cmd);
+        if (hasMsg) {
+            response = () => msg.join(" ");
         }
-        if (type === "simple" && firstThings.length > 0) {
-            valid = true;
-            response = firstThings[0].getAction(verb, cmd);
-        }
-        if (type === "inventory") {
-            valid = true;
-            response = inventoryThings[0].getAction(verb, cmd);
+        else {
+            if (type === "nav" && locations.length > 0) {
+                valid = true;
+                response = locations[0].getAction(verb, cmd);
+            }
+            if (type === "simple" && firstThings.length > 0) {
+                valid = true;
+                response = firstThings[0].getAction(verb, cmd);
+            }
+            if (type === "inventory") {
+                valid = true;
+                response = inventoryThings[0].getAction(verb, cmd);
+            }
         }
         const res = Object.assign(Object.assign({}, cmd), { valid, response });
         pubsub.publish(events.commandCall, res);

@@ -241,28 +241,30 @@ class Game implements iGame {
       strictCommand,
       msg
     } = cmd;
+    const hasMsg = msg.length > 0;
     let response = () => `Invalid command: "${strictCommand}"`;
     let valid = false;
 
-    if (type === "nav" && locations.length > 0) {
-      valid = true;
-      response = locations[0].getAction(verb, cmd);
-    }
+    if (hasMsg) {
+      response = () => msg.join(" ");
+    } else {
 
-    if (type === "simple" && firstThings.length > 0) {
-      valid = true;
-      response = firstThings[0].getAction(verb, cmd);
-    }
+      if (type === "nav" && locations.length > 0) {
+        valid = true;
+        response = locations[0].getAction(verb, cmd);
+      }
+  
+      if (type === "simple" && firstThings.length > 0) {
+        valid = true;
+        response = firstThings[0].getAction(verb, cmd);
+      }
+  
+      if (type === "inventory") {
+        valid = true;
+        response = inventoryThings[0].getAction(verb, cmd);
+      }
 
-    if (type === "inventory") {
-      valid = true;
-      response = inventoryThings[0].getAction(verb, cmd);
     }
-
-    // if (msg && msg.length > 0) {
-    //   valid = false;
-    //   response = () => msg.join(" ");
-    // }
 
     const res = { ...cmd, valid, response };
 
