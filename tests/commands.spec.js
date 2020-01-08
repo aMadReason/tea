@@ -32,9 +32,37 @@ test("drop rope", () => {
   expect(res).toMatch(/Rope removed from inventory./);
 });
 
-test("inventory", () => {
+test("eat rope", () => {
   G.setLocationByKey("cabin");
-  G.command("take cup").response();
-  const res = G.command("inventory").response();
-  expect(res).toMatch(/Inventory contains rope./);
+  const res = G.command("eat rope").response();
+  expect(res).toMatch(/Unable to eat rope./);
 });
+
+test("eat burger", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("eat burger").response();
+  expect(res).toMatch(/No "burger" found in inventory or cabin./);
+});
+
+test("murgjdkdk djdjdjd", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("murgjdkdk djdjdjd").response();
+  expect(res).toMatch(/Invalid command "murgjdkdk djdjdjd"./);
+});
+
+// test("inventory", () => {
+//   G.setLocationByKey("cabin");
+//   G.command("take cup").response();
+//   const res = G.command("inventory").response();
+//   expect(res).toMatch(/Inventory contains rope./);
+// });
+
+// test("location", () => {
+//   const res = G.command("location").response();
+//   expect(res).toMatch(/You are in the 'cabin'./);
+// });
+
+// test("locations", () => {
+//   const res = G.command("locations").response();
+//   expect(res).toMatch(/You are in the 'cabin', and can go to the 'deck'./);
+// });

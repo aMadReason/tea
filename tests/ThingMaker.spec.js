@@ -1,5 +1,5 @@
-import { ThingMaker } from "../dist/index";
-import { describe, help } from "../dist/behaviours/index";
+import { ThingMaker } from "../src/index";
+import { describe, help } from "../src/behaviours/index";
 
 const testThing = {
   noun: "cup",
