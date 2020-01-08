@@ -145,7 +145,7 @@ class Game {
         const simpleNoThing = !type && fLength === 0 && nouns.length > 0;
         if (simpleNoThing) {
             type = "simpleNoThing";
-            msg.push(`No "${nouns[0]}" found in ${this.getActiveLocation().name}.`);
+            msg.push(`No "${nouns[0]}" found in inventory or ${this.getActiveLocation().name}.`);
         }
         const simpleBadVerb = type === "simple" && fLength === 1 && !firstThings[0].hasAction(verb);
         if (simpleBadVerb) {
