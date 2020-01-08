@@ -142,7 +142,7 @@ class Game {
             complex: verb && fLength > 0 && sLength > 0
         };
         let type = Object.keys(cmdTypes).find(k => cmdTypes[k] && k) || false;
-        const simpleNoThing = type === "simple" && fLength === 0 && nouns.length > 0;
+        const simpleNoThing = !type && fLength === 0 && nouns.length > 0;
         if (simpleNoThing) {
             type = "simpleNoThing";
             msg.push(`No "${nouns[0]}" found in ${this.getActiveLocation().name}.`);
