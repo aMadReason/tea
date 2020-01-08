@@ -142,6 +142,11 @@ class Game {
             complex: verb && fLength > 0 && sLength > 0
         };
         let type = Object.keys(cmdTypes).find(k => cmdTypes[k] && k) || false;
+        const simpleNoThing = type === "simple" && fLength === 0 && nouns.length > 0;
+        if (simpleNoThing) {
+            type = "simpleNoThing";
+            msg.push(`No "${nouns[0]}" found in ${this.getActiveLocation().name}.`);
+        }
         const simpleBadVerb = type === "simple" && fLength === 1 && !firstThings[0].hasAction(verb);
         if (simpleBadVerb) {
             type = "simpleBadVerb";
@@ -152,15 +157,11 @@ class Game {
             firstThings[0].noun === firstThings[1].noun;
         if (simpleDuplicate) {
             type = "simpleDuplicate";
-            msg.push(`Please be more descriptive and reference ${firstThings
-                .map(i => `"${i.described}"`)
-                .join(" or ")}.`);
+            msg.push(`Please be more descriptive and reference ${firstThings.map(i => `"${i.described}"`).join(" or ")}.`);
         }
         if (inventoryThings.length >= 2) {
             type = "inventoryDuplicate";
-            msg.push(`Please be more descriptive and reference ${inventoryThings
-                .map(i => `"${i.described}"`)
-                .join(" or ")}.`);
+            msg.push(`Please be more descriptive and reference ${inventoryThings.map(i => `"${i.described}"`).join(" or ")}.`);
         }
         const result = Object.assign(Object.assign({ msg }, parserResult), { verb,
             type,

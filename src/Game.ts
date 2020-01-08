@@ -1,5 +1,4 @@
 import { iGame, iThing, iGameData, iBehaviour, iCommand } from "./_types";
-//import { help, describe, examine } from "./behaviours";
 import pubsub from "./modules/pubsub";
 import commandParser from "./modules/commandParser";
 import { ThingMaker, defaultBehaviours } from "./index";
@@ -164,11 +163,7 @@ class Game implements iGame {
     const firstThings = this.getThingsByNoun(nouns[0], described[0]);
     const secondThings = this.getThingsByNoun(nouns[1], described[1]);
     const iThings = this.getThingsByLocationKey(null);
-    const inventoryThings = this.getThingsByNoun(
-      nouns[0],
-      described[0],
-      iThings
-    );
+    const inventoryThings = this.getThingsByNoun(nouns[0], described[0], iThings);
 
     const lLength = locations.length;
     const fLength = firstThings.length;
@@ -186,35 +181,30 @@ class Game implements iGame {
     let type = Object.keys(cmdTypes).find(k => cmdTypes[k] && k) || false;
 
     // secondary checks
+    const simpleNoThing = type === "simple" && fLength === 0 && nouns.length > 0;
+    if(simpleNoThing) {
+      type = "simpleNoThing";
+      msg.push(`No "${nouns[0]}" found in ${this.getActiveLocation().name}.`);
+    }
+
     const simpleBadVerb = type === "simple" && fLength === 1 && !firstThings[0].hasAction(verb);
     if (simpleBadVerb) {
       type = "simpleBadVerb";
-      msg.push(
-        `Unable to ${command}.`
-      );
+      msg.push(`Unable to ${command}.`);
     }
 
     const simpleDuplicate =
       type === "simple" &&
       fLength >= 2 &&
       firstThings[0].noun === firstThings[1].noun;
-
     if (simpleDuplicate) {
       type = "simpleDuplicate";
-      msg.push(
-        `Please be more descriptive and reference ${firstThings
-          .map(i => `"${i.described}"`)
-          .join(" or ")}.`
-      );
+      msg.push(`Please be more descriptive and reference ${firstThings.map(i => `"${i.described}"`).join(" or ")}.`);
     }
 
     if (inventoryThings.length >= 2) {
       type = "inventoryDuplicate";
-      msg.push(
-        `Please be more descriptive and reference ${inventoryThings
-          .map(i => `"${i.described}"`)
-          .join(" or ")}.`
-      );
+      msg.push(`Please be more descriptive and reference ${inventoryThings.map(i => `"${i.described}"`).join(" or ")}.`);
     }
 
     const result = {
@@ -267,9 +257,7 @@ class Game implements iGame {
     }
 
     const res = { ...cmd, valid, response };
-
     pubsub.publish(events.commandCall, res);
-
     return res;
   }
 }
