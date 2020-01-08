@@ -13,26 +13,15 @@ abstract class ThingMaker {
     return processedData;
   }
 
-  static make(
-    data: iThingData,
-    behaviourReg: Map<string, iBehaviour>,
-    game: iGame
-  ): iThing {
+  static make(data: iThingData, behaviourReg: Map<string, iBehaviour>, game: iGame): iThing {
     const processedData = ThingMaker.preProcess(data);
-    const {
-      noun,
-      described,
-      behaviours,
-      locationKey,
-      key,
-      properties
-    } = processedData;
+    const { noun, described, behaviours, insideKey, key, properties } = processedData;
 
     const thing = new Thing({
       noun,
       properties,
       described,
-      locationKey,
+      insideKey,
       key,
       game
     });

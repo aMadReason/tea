@@ -1,6 +1,8 @@
-export { default as describe } from "./describe";
-export { default as goTo } from "./goTo";
-export { default as take } from "./take";
-export { default as help } from "./help";
-export { default as usePortal } from "./usePortal";
-export { default as examine } from "./examine";
+export { default as describe } from "./default/describe";
+export { default as examine } from "./default/examine";
+export { default as help } from "./default/help";
+
+export { default as goTo } from "./location/goTo";
+
+export { default as take } from "./item/take";
+export { default as usePortal } from "./item/usePortal";

@@ -41,7 +41,7 @@ export interface iGame {
   locations: Array<iThing>;
   things: Array<iThing>;
   behaviourReg: Map<string, iBehaviour>;
-  registerBehaviour(behaviour: iBehaviour): void;
+  registerBehaviour(behaviour: iBehaviour | Array<iBehaviour>): void;
   getRegister(): Map<string, iBehaviour>;
   subscribe(evtName: string, callback: () => {}): void;
   addLocation(data: iThing): void;
@@ -49,6 +49,7 @@ export interface iGame {
   getActiveLocation(): iThing;
   setLocationByKey(key: string): void;
   getLocationByKey(key: string): iThing;
+  getThingByKey(key: string, things: Array<iThing>): iThing;
 }
 
 export interface iThing {
@@ -56,22 +57,25 @@ export interface iThing {
   noun: string;
   described: string;
   name: string;
-  locationKey?: string | null;
+  insideKey?: string | null;
   game?: iGame | null;
   pubsub?: iPubsub | null;
   behaviours?: Array<string>;
   methods: Map<string, behaviourMethod>;
   properties: Map<string, string | iProperties<string | Array<string> | iProperties<string>>>;
   actions: Map<string, string>; // maps verbs to method key
-  setLocationKey(key: string): void;
+  setInsideKey(key: string): void;
   setProp(
     key: string,
     value: string | iProperties<string | Array<string> | iProperties<string>> | Array<string>
   ): void;
-  getProp(key: string): string | Array<string> | iProperties<string | Array<string> | iProperties<string>>;
+  getProp(
+    key: string
+  ): string | Array<string> | iProperties<string | Array<string> | iProperties<string>>;
   setMethod(key: string, value: behaviourMethod): void;
   hasMethod(key: string): boolean;
   getMethod(key: string, cmd: iCommand): behaviourMethod;
+  callMethod(key: string, cmd: iCommand): string;
   setAction(key: string, value: string): void;
   hasAction(key: string): boolean;
   getAction(key: string, cmd?: iCommand): () => string;
@@ -83,7 +87,7 @@ export interface iThingData {
   noun: string;
   key?: string;
   described?: string;
-  locationKey?: string;
+  insideKey?: string | null;
   behaviours?: Array<string>;
   properties?: iProperties<string | Array<string> | iProperties<string>>;
   actions?: iProperties<string>; // maps verbs to method key

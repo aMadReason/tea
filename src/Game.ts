@@ -24,8 +24,12 @@ class Game implements iGame {
     defaultBehaviours.map(b => this.registerBehaviour(b));
   }
 
-  registerBehaviour(behaviour: iBehaviour) {
-    this.behaviourReg.set(behaviour.name, behaviour);
+  registerBehaviour(behaviour: iBehaviour | Array<iBehaviour>) {
+    if (Array.isArray(behaviour)) {
+      behaviour.map(i => this.behaviourReg.set(i.name, i));
+    } else {
+      this.behaviourReg.set(behaviour.name, behaviour);
+    }
     return this;
   }
 
@@ -35,14 +39,6 @@ class Game implements iGame {
 
   subscribe(eventName: string, callback: () => {}) {
     return pubsub.subscribe(eventName, callback);
-  }
-
-  preThingAdd(data: iThing) {
-    const defaultBehaviors = defaultBehaviours.map(i => i.name);
-    const dataBehaviours = data.behaviours || [];
-    const behaviours = [...new Set([...defaultBehaviors, ...dataBehaviours])];
-    const processedData = { ...data, behaviours };
-    return processedData;
   }
 
   addLocation(thing: iThing) {
@@ -84,19 +80,35 @@ class Game implements iGame {
   }
 
   getThingsByLocationKey(key: string = null): iThing[] {
-    return this.things.filter(i => i.locationKey === key);
+    return this.things.filter(i => i.insideKey === key);
   }
 
   getActiveThings(locationKey: string = this.location): iThing[] {
     return this.getThingsByLocationKey(locationKey);
   }
 
-  getThingByKey(key: string): iThing {
-    return this.things.find(i => i.key === key);
+  getThingByKey(key: string, things = this.things): iThing {
+    return things.find(i => i.key === key);
   }
 
   getThings(): iThing[] {
     return this.things;
+  }
+
+  getThingsByNoun(
+    noun: String,
+    described: String = undefined,
+    things: Array<iThing> = this.getActiveThings()
+  ) {
+    const fThings = things.filter(t => {
+      const isDescribed = t.described === described;
+      const isNoun = noun && t.noun === noun;
+      if (described && isDescribed && isNoun) return true;
+      if (!described && isNoun) return true;
+      return false;
+    });
+
+    return fThings;
   }
 
   getLocations() {
@@ -125,22 +137,8 @@ class Game implements iGame {
     }
 
     this.setLocationByKey(location);
-  }
 
-  getThingsByNoun(
-    noun: String,
-    described: String = undefined,
-    things: iThing[] = this.getActiveThings()
-  ) {
-    const fThings = things.filter(t => {
-      const isDescribed = t.described === described;
-      const isNoun = noun && t.noun === noun;
-      if (described && isDescribed && isNoun) return true;
-      if (!described && isNoun) return true;
-      return false;
-    });
-
-    return fThings;
+    return this;
   }
 
   getLocationsByNoun(noun: String, described: String = undefined) {
@@ -182,7 +180,7 @@ class Game implements iGame {
 
     // secondary checks
     const simpleNoThing = !type && fLength === 0 && nouns.length > 0;
-    if(simpleNoThing) {
+    if (simpleNoThing) {
       type = "simpleNoThing";
       msg.push(`No "${nouns[0]}" found in inventory or ${this.getActiveLocation().name}.`);
     }
@@ -194,17 +192,23 @@ class Game implements iGame {
     }
 
     const simpleDuplicate =
-      type === "simple" &&
-      fLength >= 2 &&
-      firstThings[0].noun === firstThings[1].noun;
+      type === "simple" && fLength >= 2 && firstThings[0].noun === firstThings[1].noun;
     if (simpleDuplicate) {
       type = "simpleDuplicate";
-      msg.push(`Please be more descriptive and reference ${firstThings.map(i => `"${i.described}"`).join(" or ")}.`);
+      msg.push(
+        `Please be more descriptive and reference ${firstThings
+          .map(i => `"${i.described}"`)
+          .join(" or ")}.`
+      );
     }
 
     if (inventoryThings.length >= 2) {
       type = "inventoryDuplicate";
-      msg.push(`Please be more descriptive and reference ${inventoryThings.map(i => `"${i.described}"`).join(" or ")}.`);
+      msg.push(
+        `Please be more descriptive and reference ${inventoryThings
+          .map(i => `"${i.described}"`)
+          .join(" or ")}.`
+      );
     }
 
     const result = {
@@ -222,15 +226,7 @@ class Game implements iGame {
 
   command(command: string, patterns = this.parserPatterns) {
     const cmd: iCommand = this.parseCommand(command, patterns);
-    const {
-      verb,
-      type,
-      locations,
-      firstThings,
-      inventoryThings,
-      strictCommand,
-      msg
-    } = cmd;
+    const { verb, type, locations, firstThings, inventoryThings, strictCommand, msg } = cmd;
     const hasMsg = msg.length > 0;
     let response = () => `Invalid command: "${strictCommand}"`;
     let valid = false;
@@ -238,22 +234,20 @@ class Game implements iGame {
     if (hasMsg) {
       response = () => msg.join(" ");
     } else {
-
       if (type === "nav" && locations.length > 0) {
         valid = true;
         response = locations[0].getAction(verb, cmd);
       }
-  
+
       if (type === "simple" && firstThings.length > 0) {
         valid = true;
         response = firstThings[0].getAction(verb, cmd);
       }
-  
+
       if (type === "inventory") {
         valid = true;
         response = inventoryThings[0].getAction(verb, cmd);
       }
-
     }
 
     const res = { ...cmd, valid, response };

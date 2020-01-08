@@ -1,6 +1,6 @@
 export const testThing = {
   noun: "cup",
-  locationKey: null,
+  insideKey: null,
   described: "golden cup",
   behaviours: [],
   properties: {
@@ -20,7 +20,7 @@ export const gamedata = {
   things: [
     {
       noun: "door",
-      locationKey: "deck",
+      insideKey: "deck",
       behaviours: ["usePortal"],
       properties: {
         filterActionsTo: ["use"],
@@ -32,7 +32,7 @@ export const gamedata = {
     },
     {
       noun: "door",
-      locationKey: "cabin",
+      insideKey: "cabin",
       behaviours: ["usePortal"],
       properties: {
         filterActionsTo: ["use"],
@@ -44,7 +44,7 @@ export const gamedata = {
     },
     {
       noun: "cup",
-      locationKey: "cabin",
+      insideKey: "cabin",
       described: "golden cup",
       behaviours: ["take"],
       properties: {
@@ -62,7 +62,7 @@ export const gamedata = {
     },
     {
       noun: "book",
-      locationKey: "cabin",
+      insideKey: "cabin",
       described: "red book",
       behaviours: ["take"],
       properties: {
@@ -74,7 +74,7 @@ export const gamedata = {
     },
     {
       noun: "book",
-      locationKey: "cabin",
+      insideKey: "cabin",
       described: "green book",
       behaviours: ["take"],
       properties: {
@@ -86,7 +86,7 @@ export const gamedata = {
     },
     {
       noun: "rope",
-      locationKey: "deck",
+      insideKey: "deck",
       behaviours: ["take"],
       properties: {
         filterActionsTo: ["take", "drop", "examine"],
@@ -100,7 +100,7 @@ export const gamedata = {
     },
     {
       noun: "rooope",
-      locationKey: "deck",
+      insideKey: "deck",
       behaviours: ["take"],
       properties: {
         filterActionsTo: ["take", "drop", "examine"],

@@ -1,15 +1,8 @@
 import { genId } from "./modules/uuid";
-import {
-  iThing,
-  behaviourMethod,
-  iBehaviour,
-  iProperties,
-  iCommand,
-  iGame
-} from "./_types";
+import { iThing, behaviourMethod, iBehaviour, iProperties, iCommand, iGame } from "./_types";
 
 class Thing implements iThing {
-  locationKey = "";
+  insideKey = "";
   noun = "";
   described = "";
   name = "";
@@ -22,14 +15,15 @@ class Thing implements iThing {
   constructor({
     noun = "",
     described = "",
-    locationKey = "",
+    insideKey = "",
     properties = {},
     game = null,
     key = genId()
   }) {
     this.noun = noun;
     this.described = described;
-    this.locationKey = locationKey || null;
+    this.insideKey = insideKey || null;
+    this.insideKey = insideKey || null;
     this.name = this.described || this.noun;
     this.key = key;
     this.game = game || null;
@@ -39,8 +33,8 @@ class Thing implements iThing {
     return this;
   }
 
-  setLocationKey(key: string) {
-    this.locationKey = key;
+  setInsideKey(key: string) {
+    this.insideKey = key;
   }
 
   setProp(key: string, value: string | iProperties<string> | Array<string>) {
@@ -59,10 +53,12 @@ class Thing implements iThing {
     return this.methods.has(key);
   }
 
-  getMethod(key: string, cmd: iCommand) {
-    const method = this.methods.get(key);
-    //if(!method) return () => `Unable to `;
-    return () => method(this, cmd);
+  getMethod(key: string, cmd: iCommand = null) {
+    return () => this.methods.get(key)(this, cmd);
+  }
+
+  callMethod(key, cmd: iCommand = null) {
+    return this.getMethod(key)();
   }
 
   setAction(key: string, value: string) {

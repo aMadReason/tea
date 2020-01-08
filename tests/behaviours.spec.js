@@ -1,43 +1,31 @@
-import { ThingMaker } from "../dist/index.js";
-import { describe, help, examine } from "../dist/behaviours/index.js";
+import { gamedata } from "./gamedata";
+import { Game } from "../src/index.ts";
+import { describe, help, examine, goTo } from "../src/behaviours/index.ts";
 
-const behaviourReg = new Map();
-behaviourReg.set(describe.name, describe);
-behaviourReg.set(help.name, help);
-behaviourReg.set(examine.name, examine);
+const bGame = new Game();
+bGame.registerBehaviour([describe, help, examine, gamedata, goTo]);
+bGame.resolveGameData(gamedata);
 
-const testThing = {
-  noun: "cup",
-  locationKey: null,
-  described: "golden cup",
-  behaviours: ["describe", "help", "examine"],
-  properties: {
-    stateKey: "initial",
-    descriptions: {
-      initial: "A small golden cup rests on it's side on the floor.",
-      default: "A small golden cup.",
-      dropped: "The golden cup you left here sits on the floor."
-    },
-    details: {
-      default: "The {name} is made of plastic... disapointing."
-    }
-  }
-};
+const cup = bGame.getThingsByNoun("cup")[0];
+const deck = bGame.getLocationByKey("deck");
+const cabin = bGame.getLocationByKey("cabin");
 
 test("Test 'describe' behaviour", () => {
-  const t = ThingMaker.make(testThing, behaviourReg);
-  const res = t.getMethod("describe")();
+  const res = cup.callMethod("describe");
   expect(res).toMatch(/A small golden cup rests on it's side on the floor./);
 });
 
 test("Test 'examine' behaviour", () => {
-  const t = ThingMaker.make(testThing, behaviourReg);
-  const res = t.getMethod("examine")();
+  const res = cup.callMethod("examine");
   expect(res).toMatch(/The golden cup is made of plastic... disapointing./);
 });
 
 test("Test 'help' behaviour", () => {
-  const t = ThingMaker.make(testThing, behaviourReg);
-  const res = t.getMethod("help")();
+  const res = cup.callMethod("help");
   expect(res).toMatch(/You can describe, help or examine the golden cup./);
+});
+
+test("Test 'goTo' behaviour", () => {
+  const res = cabin.callMethod("goTo");
+  expect(res).toMatch(/Moved to cabin./);
 });

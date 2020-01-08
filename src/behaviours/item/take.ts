@@ -5,29 +5,29 @@ const behaviour = {
   properties: {},
   methods: {
     take(ins: Thing): String {
-      const key = ins.locationKey;
+      const key = ins.insideKey;
       if (key === null) return `${ins.name} is already in your inventory.`;
-      ins.setLocationKey(null);
+      ins.setInsideKey(null);
 
       const stateKey = ins.getProp("stateKey");
       if (stateKey && stateKey === "initial") {
         ins.setProp("stateKey", "default");
       }
 
-      return `${ins.name} added to inventory.`;
+      return `${ins.name} added to inventory.`.replace(/^\w/, c => c.toUpperCase());
     },
     drop(ins: Thing): String {
-      const key = ins.locationKey;
+      const key = ins.insideKey;
       const loc = ins.game.getActiveLocation();
       if (key) return `${ins.name} is not in your inventory.`;
-      ins.setLocationKey(loc.key);
+      ins.setInsideKey(loc.key);
 
       const descriptions = ins.getProp("descriptions");
       if (descriptions && "dropped" in descriptions) {
         ins.setProp("stateKey", "dropped");
       }
 
-      return `${ins.name} removed from inventory.`;
+      return `${ins.name} removed from inventory.`.replace(/^\w/, c => c.toUpperCase());
     }
   },
   actions: {
