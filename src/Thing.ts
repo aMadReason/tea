@@ -5,12 +5,15 @@ class Thing implements iThing {
   insideKey = "";
   noun = "";
   described = "";
-  name = "";
   properties = new Map();
   methods = new Map();
   actions = new Map();
   key = "";
   game: iGame = null;
+
+  get name() {
+    return this.described || this.noun;
+  }
 
   constructor({
     noun = "",
@@ -24,7 +27,6 @@ class Thing implements iThing {
     this.described = described;
     this.insideKey = insideKey || null;
     this.insideKey = insideKey || null;
-    this.name = this.described || this.noun;
     this.key = key;
     this.game = game || null;
 

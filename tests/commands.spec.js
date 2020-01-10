@@ -47,9 +47,21 @@ test("eat burger", () => {
 test("murgjdkdk djdjdjd", () => {
   G.setLocationByKey("cabin");
   const res = G.command("murgjdkdk djdjdjd").response();
-  expect(res).toMatch(/Invalid command "murgjdkdk djdjdjd"./);
+  expect(res).toMatch(/Invalid command: murgjdkdk djdjdjd./);
 });
 
+test("help with cabin", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("help with cabin").response();
+  expect(res).toMatch(
+    /The cabin has the following actions available; describe, help, examine, go, move and travel./
+  );
+});
+
+test("locations", () => {
+  const res = G.command("locations").response();
+  expect(res).toMatch(/Locations available: cabin and deck./);
+});
 // test("inventory", () => {
 //   G.setLocationByKey("cabin");
 //   G.command("take cup").response();

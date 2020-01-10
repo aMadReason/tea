@@ -28,8 +28,7 @@ const defaultPatterns = {
   "(it)": "Ignore",
   "(light|mix)$": "Noun",
   "^(light|mix|move|shift|pick)": "Verb",
-  "(#Conjunction|above|adjacent|beside|under|over|above|on|over|in|inside)":
-    "Join",
+  "(#Conjunction|above|adjacent|beside|under|over|above|on|over|in|inside)": "Join",
   "(north|east|south|west|left|right|up|down)": "Direction",
   "#Verb (#Determiner|#Preposition)? #Adjective+ (with|using|on|using|and) (#Determiner|#Preposition)? #Adjective #Noun$":
     "ParserComplexImplicit",
@@ -50,6 +49,7 @@ export default function commandParser(input, patterns = {}) {
 
   // Get output
   const tags = doc.out("tags");
+  const terms = doc.terms().out("array");
   const verbs = doc
     .verbs()
     .toInfinitive()
@@ -108,6 +108,7 @@ export default function commandParser(input, patterns = {}) {
     .join(" ");
 
   return {
+    terms,
     tags,
     //infinitives,
     singulars,

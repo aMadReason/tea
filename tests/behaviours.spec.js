@@ -22,7 +22,9 @@ test("Test 'examine' behaviour", () => {
 
 test("Test 'help' behaviour", () => {
   const res = cup.callMethod("help");
-  expect(res).toMatch(/You can describe, help or examine the golden cup./);
+  expect(res).toMatch(
+    /The golden cup has the following actions available; describe, help and examine./
+  );
 });
 
 test("Test 'goTo' behaviour", () => {

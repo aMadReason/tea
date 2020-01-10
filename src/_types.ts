@@ -9,6 +9,7 @@ interface iPubsub {
 }
 
 export interface iCommand {
+  terms: Array<string>;
   tags: Array<any>;
   singulars: Array<string>;
   strictCommand: string;
@@ -28,6 +29,7 @@ export interface iCommand {
 }
 
 export type behaviourMethod = (ins: iThing, cmd?: iCommand) => string;
+export type gameCommandMethod = (g: iGame, cmd?: iCommand) => string;
 
 export interface iBehaviour {
   name: string;
@@ -36,20 +38,40 @@ export interface iBehaviour {
   actions: iProperties<string>; // maps verbs to method key
 }
 
+export interface iCommandMethod {
+  name: string;
+  method: gameCommandMethod;
+}
+
 export interface iGame {
   location: string;
-  locations: Array<iThing>;
   things: Array<iThing>;
+  locations: Array<iThing>;
   behaviourReg: Map<string, iBehaviour>;
-  registerBehaviour(behaviour: iBehaviour | Array<iBehaviour>): void;
+  gameCommands?: Map<string, gameCommandMethod>;
+  capitalise(str: string): string;
+  registerBehaviour(behaviour: iBehaviour | Array<iBehaviour>): iGame;
   getRegister(): Map<string, iBehaviour>;
   subscribe(evtName: string, callback: () => {}): void;
   addLocation(data: iThing): void;
   addThing(data: iThing): void;
   getActiveLocation(): iThing;
-  setLocationByKey(key: string): void;
-  getLocationByKey(key: string): iThing;
+  getLocationByKey(key: string | null): iThing;
+  setLocationByKey(key: string | null): void;
+  getLocations(): Array<iThing>;
+  getThingsByLocationKey(key: string | null): Array<iThing>;
+  getLocationNouns(): Array<string>;
+  getActiveThings(locationKey: string): Array<iThing>;
   getThingByKey(key: string, things: Array<iThing>): iThing;
+  getThings(): Array<iThing>;
+  getThingsByNoun(
+    noun: string,
+    described: string | undefined,
+    things: Array<iThing>
+  ): Array<iThing>;
+  resolveGameData(iGameData): iGame;
+  parseCommand(cmd: string, patterns: iCommand);
+  command(cmd: string, patterns: iCommand);
 }
 
 export interface iThing {
