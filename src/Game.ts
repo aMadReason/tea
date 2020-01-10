@@ -1,14 +1,14 @@
 import { iGame, iThing, iBehaviour, iCommand, gameCommandMethod } from "./_types";
 import pubsub from "./modules/pubsub";
 import commandParser from "./modules/commandParser";
-import { ThingMaker, defaultBehaviours, locations } from "./index";
+import { ThingMaker, defaultBehaviours, locations, location } from "./index";
 
 const events = {
   locationChange: "tea-location-change",
   commandCall: "tea-command"
 };
 
-const gCommands = [locations];
+const gCommands = [locations, location];
 
 class Game implements iGame {
   location: string = null;
