@@ -1,7 +1,7 @@
-import { iCommandMethod, iGame } from "../index";
+import { iCommandMethod } from "../index";
 const gameCommand: iCommandMethod = {
   name: "locations",
-  method: (g: iGame, cmd) => {
+  method: (g, cmd = null) => {
     const first = `Locations available:`;
     let locs = [...g.getLocationNouns()];
 

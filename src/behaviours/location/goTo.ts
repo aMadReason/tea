@@ -1,9 +1,10 @@
-import { Thing } from "../index";
+import { iBehaviour } from "../../index";
 
-const behaviour = {
+const behaviour: iBehaviour = {
   name: "goTo", // assignable to locations
+  properties: {},
   methods: {
-    goTo(ins: Thing): String {
+    goTo(ins, cmd = null) {
       ins.game.setLocationByKey(ins.key);
       return `Moved to ${ins.name}.`;
     }

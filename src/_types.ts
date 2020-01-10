@@ -3,7 +3,7 @@ export interface iProperties<T> {
 }
 
 interface iPubsub {
-  subs: Map<String, Function>;
+  subs: Map<string, Function>;
   subscribe: Function;
   publish: Function;
 }
@@ -28,9 +28,7 @@ export interface iCommand {
   msg?: Array<string>;
 }
 
-export type behaviourMethod = (ins: iThing, cmd?: iCommand) => string;
-export type gameCommandMethod = (g: iGame, cmd?: iCommand) => string;
-
+export type behaviourMethod = (t: iThing, cmd?: iCommand) => string;
 export interface iBehaviour {
   name: string;
   methods: iProperties<behaviourMethod>;
@@ -38,6 +36,7 @@ export interface iBehaviour {
   actions: iProperties<string>; // maps verbs to method key
 }
 
+export type gameCommandMethod = (g: iGame, cmd?: iCommand) => string;
 export interface iCommandMethod {
   name: string;
   method: gameCommandMethod;
@@ -77,9 +76,9 @@ export interface iGame {
 export interface iThing {
   key: string;
   noun: string;
-  described: string;
-  name: string;
+  described: string | null;
   insideKey?: string | null;
+  name: string;
   game?: iGame | null;
   pubsub?: iPubsub | null;
   behaviours?: Array<string>;
@@ -93,15 +92,16 @@ export interface iThing {
   ): void;
   getProp(
     key: string
-  ): string | Array<string> | iProperties<string | Array<string> | iProperties<string>>;
+  ): undefined | string | Array<string> | iProperties<string | Array<string> | iProperties<string>>;
   setMethod(key: string, value: behaviourMethod): void;
   hasMethod(key: string): boolean;
-  getMethod(key: string, cmd: iCommand): behaviourMethod;
-  callMethod(key: string, cmd: iCommand): string;
+  getMethod(key: string, cmd: iCommand | null): behaviourMethod;
+  callMethod(key: string, cmd: iCommand | null): string;
   setAction(key: string, value: string): void;
   hasAction(key: string): boolean;
-  getAction(key: string, cmd?: iCommand): () => string;
+  getAction(key: string, cmd?: iCommand | null): () => string;
   getActionKeys(): Array<string>;
+  addBehaviour(behaviour: iBehaviour): void;
 }
 
 // Data shapes

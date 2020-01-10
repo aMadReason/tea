@@ -1,4 +1,4 @@
-import { iThing, iBehaviour, iCommand } from "../index";
+import { iBehaviour } from "../../index";
 
 // reveals more detailed details about the thing
 
@@ -11,7 +11,7 @@ const examine: iBehaviour = {
     }
   },
   methods: {
-    examine(ins: iThing, cmd?: iCommand): string {
+    examine(ins, cmd = null): string {
       const name = ins.name.toString();
       const stateKey = ins.getProp("stateKey").toString();
       const details = ins.getProp("details");

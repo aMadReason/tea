@@ -1,4 +1,4 @@
-import { iThing, iBehaviour, iCommand } from "../../index";
+import { iBehaviour } from "../../index";
 
 const behaviour: iBehaviour = {
   name: "help",
@@ -7,7 +7,7 @@ const behaviour: iBehaviour = {
     excludeActionsTo: []
   },
   methods: {
-    help(ins: iThing, cmd?: iCommand): string {
+    help(ins, cmd = null): string {
       const allowedActs = ins.getProp("filterActionsTo");
       const first = `The ${ins.name} has the following actions available;`;
       let acts = [...ins.getActionKeys()];

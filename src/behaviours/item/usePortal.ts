@@ -1,13 +1,13 @@
-import { Thing } from "../index";
+import { iBehaviour } from "../../index";
 
-const behaviour = {
+const behaviour: iBehaviour = {
   name: "usePortal",
   properties: {
     portalTo: "",
     badPortalMsg: "Broken portal"
   },
   methods: {
-    use(ins: Thing): String {
+    use(ins, cmd = null) {
       const locationKey = ins.getProp("portalTo").toString();
       const location = ins.game.getLocationByKey(locationKey);
       if (!location) return ins.getProp("badPortalMsg").toString();

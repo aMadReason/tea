@@ -1,5 +1,5 @@
 import { genId } from "./modules/uuid";
-import { iThing, behaviourMethod, iBehaviour, iProperties, iCommand, iGame } from "./_types";
+import { iThing, iCommand, iGame } from "./_types";
 
 class Thing implements iThing {
   insideKey = "";
@@ -35,19 +35,19 @@ class Thing implements iThing {
     return this;
   }
 
-  setInsideKey(key: string) {
+  setInsideKey(key) {
     this.insideKey = key;
   }
 
-  setProp(key: string, value: string | iProperties<string> | Array<string>) {
+  setProp(key, value) {
     this.properties.set(key, value);
   }
 
-  getProp(key: string) {
+  getProp(key) {
     return this.properties.get(key);
   }
 
-  setMethod(key: string, value: behaviourMethod) {
+  setMethod(key, value) {
     this.methods.set(key, value);
   }
 
@@ -55,15 +55,15 @@ class Thing implements iThing {
     return this.methods.has(key);
   }
 
-  getMethod(key: string, cmd: iCommand = null) {
+  getMethod(key, cmd = null) {
     return () => this.methods.get(key)(this, cmd);
   }
 
-  callMethod(key, cmd: iCommand = null) {
+  callMethod(key, cmd = null) {
     return this.getMethod(key)();
   }
 
-  setAction(key: string, value: string) {
+  setAction(key, value) {
     this.actions.set(key, value);
   }
 
@@ -80,7 +80,7 @@ class Thing implements iThing {
     return [...this.actions.keys()];
   }
 
-  addBehaviour(behaviour: iBehaviour) {
+  addBehaviour(behaviour) {
     const { properties, methods, actions } = behaviour;
 
     if (properties) {

@@ -1,10 +1,10 @@
-import { Thing } from "../index";
+import { iBehaviour } from "../../index";
 
-const behaviour = {
+const behaviour: iBehaviour = {
   name: "take",
   properties: {},
   methods: {
-    take(ins: Thing): String {
+    take(ins, cmd = null) {
       const key = ins.insideKey;
       if (key === null) return `${ins.name} is already in your inventory.`;
       ins.setInsideKey(null);
@@ -16,14 +16,14 @@ const behaviour = {
 
       return `${ins.name} added to inventory.`.replace(/^\w/, c => c.toUpperCase());
     },
-    drop(ins: Thing): String {
+    drop(ins) {
       const key = ins.insideKey;
       const loc = ins.game.getActiveLocation();
       if (key) return `${ins.name} is not in your inventory.`;
       ins.setInsideKey(loc.key);
 
       const descriptions = ins.getProp("descriptions");
-      if (descriptions && "dropped" in descriptions) {
+      if (descriptions && descriptions["dropped"]) {
         ins.setProp("stateKey", "dropped");
       }
 

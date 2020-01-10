@@ -5,7 +5,7 @@ import { iThingData, iGame } from "./_types";
 export const defaultBehaviours = [describe, help, examine];
 
 abstract class ThingMaker {
-  static preProcess(data: iThingData) {
+  static preProcess(data: iThingData): iThingData {
     const defaultBehaviors = defaultBehaviours.map(i => i.name);
     const dataBehaviours = data.behaviours || [];
     const behaviours = [...new Set([...defaultBehaviors, ...dataBehaviours])];
