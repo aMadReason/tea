@@ -20,7 +20,7 @@ export interface iCommand {
   nouns: Array<string>;
   described: Array<string>;
   joins: Array<string>;
-  command: string;
+  input: string;
   verb?: string;
   locations?: Array<iThing>;
   firstThings?: Array<iThing>;

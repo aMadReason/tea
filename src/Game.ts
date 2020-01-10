@@ -160,7 +160,7 @@ class Game implements iGame {
   parseCommand(cmd: string, patterns = this.parserPatterns) {
     const msg = [];
     const parserResult = commandParser(cmd.toLocaleLowerCase(), patterns);
-    const { nouns, verbs, described, command, terms } = parserResult;
+    const { nouns, verbs, described, input, terms } = parserResult;
     const verb = verbs[0];
     const locations = this.getLocationsByNoun(nouns[0], described[0]);
     const firstThings = this.getThingsByNoun(nouns[0], described[0]);
@@ -178,7 +178,7 @@ class Game implements iGame {
 
     // check basic type - order is important!
     const cmdTypes = {
-      gameCommand: tLength === 1,
+      gameCommand: tLength === 1 && this.gameCommands.has(input),
       nav: lLength > 0,
       inventory: verb && iLength > 0 && fLength === 0,
       simple: verb && fLength > 0 && sLength === 0,
@@ -203,7 +203,7 @@ class Game implements iGame {
 
     if (type === "simpleBadVerb") {
       type = "simpleBadVerb";
-      msg.push(`Unable to ${command}.`);
+      msg.push(`Unable to ${input}.`);
     }
 
     // const simpleDuplicate =
@@ -238,11 +238,11 @@ class Game implements iGame {
     return result;
   }
 
-  command(command: string, patterns = this.parserPatterns) {
-    const cmd: iCommand = this.parseCommand(command, patterns);
-    const { verb, type, locations, firstThings, inventoryThings, msg, command: original } = cmd;
+  command(command, patterns = this.parserPatterns) {
+    const cmd = this.parseCommand(command, patterns);
+    const { verb, type, locations, firstThings, inventoryThings, msg, input } = cmd;
     const hasMsg = msg.length > 0;
-    let response = () => `Invalid command: ${original}.`;
+    let response = () => `Invalid command: ${input}.`;
     let valid = false;
 
     if (hasMsg) {
@@ -250,7 +250,7 @@ class Game implements iGame {
     } else {
       if (type === "gameCommand") {
         valid = true;
-        response = () => this.gameCommands.get(original)(this);
+        response = () => this.gameCommands.get(input)(this);
       }
 
       if (type === "nav" && locations.length > 0) {

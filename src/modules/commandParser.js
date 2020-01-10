@@ -37,10 +37,10 @@ const defaultPatterns = {
   "#Verb (#Determiner|#Preposition)? #Adjective+? #Noun": "ParserSimple"
 };
 
-export default function commandParser(input, patterns = {}) {
+export default function commandParser(original, patterns = {}) {
   const words = { ...defaultPatterns, ...patterns };
-  const inputNoStop = input.replace(/\.+$/, ""); // removes full stop
-  const doc = nlp(inputNoStop, words)
+  const originalNoStop = original.replace(/\.+$/, ""); // removes full stop
+  const doc = nlp(originalNoStop, words)
     .clone()
     .normalize(normalizeRules);
 
@@ -89,7 +89,7 @@ export default function commandParser(input, patterns = {}) {
   }
 
   // Commands
-  const command = [
+  const input = [
     verbs[0],
     described[0] || nouns[0],
     joins[0] || null,
@@ -120,6 +120,6 @@ export default function commandParser(input, patterns = {}) {
     nouns,
     described,
     joins,
-    command
+    input
   };
 }

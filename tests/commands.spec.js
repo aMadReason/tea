@@ -62,6 +62,17 @@ test("locations", () => {
   const res = G.command("locations").response();
   expect(res).toMatch(/Locations available: cabin and deck./);
 });
+
+test("locations", () => {
+  const res = G.command("locations").response();
+  expect(res).toMatch(/Locations available: cabin and deck./);
+});
+
+test("location", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("location").response();
+  expect(res).toMatch(/The current location is the cabin./);
+});
 // test("inventory", () => {
 //   G.setLocationByKey("cabin");
 //   G.command("take cup").response();
