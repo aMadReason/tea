@@ -19,8 +19,6 @@
   },
   "keywords": [],
   "jest": {
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    }
+    "preset": "ts-jest/presets/js-with-babel"
   }
 }
