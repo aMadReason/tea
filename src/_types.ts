@@ -58,7 +58,7 @@ export interface iGame {
   getLocationByKey(key: string | null): iThing;
   setLocationByKey(key: string | null): void;
   getLocations(): Array<iThing>;
-  getThingsByLocationKey(key: string | null): Array<iThing>;
+  getThingsByInsideKey(key: string | null): Array<iThing>;
   getLocationNouns(): Array<string>;
   getActiveThings(locationKey: string): Array<iThing>;
   getThingByKey(key: string, things: Array<iThing>): iThing;
