@@ -92,7 +92,7 @@ class Game implements iGame {
     return [...this.locations];
   }
 
-  getThingsByLocationKey(key) {
+  getThingsByInsideKey(key) {
     return this.things.filter(i => i.insideKey === key);
   }
 
@@ -112,7 +112,7 @@ class Game implements iGame {
   }
 
   getActiveThings(locationKey = this.location) {
-    return this.getThingsByLocationKey(locationKey);
+    return this.getThingsByInsideKey(locationKey);
   }
 
   getThingByKey(key, things = this.things) {
@@ -165,7 +165,7 @@ class Game implements iGame {
     const locations = this.getLocationsByNoun(nouns[0], described[0]);
     const firstThings = this.getThingsByNoun(nouns[0], described[0]);
     const secondThings = this.getThingsByNoun(nouns[1], described[1]);
-    const iThings = this.getThingsByLocationKey(null);
+    const iThings = this.getThingsByInsideKey(null);
     const inventoryThings = this.getThingsByNoun(nouns[0], described[0], iThings);
 
     const tLength = terms.length;
