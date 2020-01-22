@@ -43,20 +43,23 @@ export interface iCommandMethod {
 }
 
 export interface iGame {
-  location: string;
+  playerKey: string;
   things: Array<iThing>;
+  characters: Array<iThing>;
   locations: Array<iThing>;
   behaviourReg: Map<string, iBehaviour>;
   gameCommands?: Map<string, gameCommandMethod>;
   capitalise(str: string): string;
-  registerBehaviour(behaviour: iBehaviour | Array<iBehaviour>): iGame;
+  registerBehaviour(behaviour: iBehaviour | Array<iBehaviour>): void;
   getRegister(): Map<string, iBehaviour>;
   subscribe(evtName: string, callback: () => {}): void;
   addLocation(data: iThing): void;
+  addCharacter(data: iThing): void;
   addThing(data: iThing): void;
+  getCharacters(): Array<iThing>;
+  getActivePlayer(): iThing;
   getActiveLocation(): iThing;
   getLocationByKey(key: string | null): iThing;
-  setLocationByKey(key: string | null): void;
   getLocations(): Array<iThing>;
   getThingsByInsideKey(key: string | null): Array<iThing>;
   getLocationNouns(): Array<string>;
@@ -68,7 +71,9 @@ export interface iGame {
     described: string | undefined,
     things: Array<iThing>
   ): Array<iThing>;
-  resolveGameData(iGameData): iGame;
+  setLocationByKey(key: string | null): void;
+  setPlayerKey(key: string | null): void;
+  resolveGameData(iGameData: iGameData): iGame;
   parseCommand(cmd: string, patterns: iCommand);
   command(cmd: string, patterns: iCommand);
 }
@@ -77,7 +82,7 @@ export interface iThing {
   key: string;
   noun: string;
   described: string | null;
-  insideKey?: string | null;
+  insideKey: string | null;
   name: string;
   game?: iGame | null;
   pubsub?: iPubsub | null;
@@ -116,7 +121,7 @@ export interface iThingData {
 }
 
 export interface iGameData {
-  location?: string;
+  playerKey?: string;
   locations: Array<iThingData>;
   things: Array<iThingData>;
 }

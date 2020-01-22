@@ -1,4 +1,4 @@
-import { iGame, iThing, iBehaviour, iCommand, gameCommandMethod } from "./_types";
+import { iGame, iThing, iBehaviour, iCommand, gameCommandMethod, iProperties } from "./_types";
 import pubsub from "./modules/pubsub";
 import commandParser from "./modules/commandParser";
 import { ThingMaker, defaultBehaviours, locations, location } from "./index";
@@ -11,25 +11,37 @@ const events = {
 const gCommands = [locations, location];
 
 class Game implements iGame {
-  location: string = null;
+  //location: string = null;
+  playerKey: string = null;
   things: Array<iThing> = [];
+  characters: Array<iThing> = [];
   locations: Array<iThing> = [];
   behaviourReg: Map<string, iBehaviour> = new Map();
   parserPatterns: Object;
   gameCommands: Map<string, gameCommandMethod> = new Map();
 
-  constructor(things: Array<iThing> = [], locations: Array<iThing> = [], patterns = {}) {
+  constructor(
+    things: Array<iThing> = [],
+    locations: Array<iThing> = [],
+    characters: Array<iThing> = [],
+    patterns: iProperties<string> = {}
+  ) {
     this.behaviourReg = new Map();
     this.locations = locations;
     this.things = things;
+    this.characters = characters;
     this.parserPatterns = patterns;
     //add default behaviours
     defaultBehaviours.map(b => this.registerBehaviour(b));
-
     gCommands.map(i => this.gameCommands.set(i.name, i.method));
   }
 
-  capitalise(str) {
+  get location() {
+    const player = this.getActivePlayer();
+    return player ? player.insideKey : null;
+  }
+
+  capitalise(str: string) {
     return str.replace(/^\w/, c => c.toUpperCase());
   }
 
@@ -50,14 +62,31 @@ class Game implements iGame {
     return pubsub.subscribe(eventName, callback);
   }
 
-  addLocation(thing) {
+  addLocation(thing: iThing) {
     this.locations.push(thing);
     return this;
   }
 
-  addThing(thing) {
+  addCharacter(thing: iThing) {
+    this.characters.push(thing);
+    return this;
+  }
+
+  addThing(thing: iThing) {
     this.things.push(thing);
     return this;
+  }
+
+  getCharacters() {
+    return [...this.characters];
+  }
+
+  setPlayerKey(key: string) {
+    this.playerKey = key;
+  }
+
+  getActivePlayer() {
+    return this.characters.find(p => p.key === this.playerKey);
   }
 
   getActiveLocation() {
@@ -70,21 +99,24 @@ class Game implements iGame {
 
   setLocationByKey(key) {
     const { locations } = this;
+    const player = this.getActivePlayer();
     const from = this.getLocationByKey(this.location);
     const to = this.getLocationByKey(key);
 
     if (!from && to) {
-      this.location = to.key;
+      //this.location = to.key;
+      player.insideKey = to.key;
       return pubsub.publish(events.locationChange, { from, to });
     }
 
     if (to && to.key !== from.key) {
-      this.location = to.key;
+      player.insideKey = to.key;
+      //this.location = to.key;
       return pubsub.publish(events.locationChange, { from, to });
     }
 
     if (!to && locations.length > 0) {
-      return (this.location = locations[0].key);
+      return (player.insideKey = locations[0].key);
     }
   }
 
@@ -136,7 +168,7 @@ class Game implements iGame {
   }
 
   resolveGameData(data) {
-    const { locations, things, location = null } = data;
+    const { locations, things, characters, playerKey = null } = data;
 
     if (Array.isArray(locations)) {
       locations.map(i => {
@@ -152,7 +184,16 @@ class Game implements iGame {
       });
     }
 
-    this.setLocationByKey(location);
+    if (Array.isArray(characters)) {
+      characters.map(i => {
+        const char = ThingMaker.make(i, this.behaviourReg, this);
+        return this.addCharacter(char);
+      });
+    }
+
+    if (playerKey) {
+      this.setPlayerKey(playerKey);
+    }
 
     return this;
   }

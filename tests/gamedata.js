@@ -17,7 +17,24 @@ export const testThing = {
 };
 
 export const gamedata = {
+  playerKey: "peter",
+  characters: [
+    {
+      key: "peter",
+      noun: "Peter",
+      insideKey: "cabin"
+    }
+  ],
   things: [
+    {
+      noun: "apple",
+      insideKey: "peter",
+      properties: {
+        descriptions: {
+          default: "A tasty looking apple."
+        }
+      }
+    },
     {
       noun: "door",
       insideKey: "deck",

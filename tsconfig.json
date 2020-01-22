@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "verbose": true,
     "module": "es2015",
     "target": "ES2017",
     "lib": [
