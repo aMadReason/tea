@@ -23,6 +23,19 @@ test("Register game behaviours", () => {
   expect(G.getRegister().size).toBeGreaterThan(0);
 });
 
+test("Trying to set location prior to adding a player character", () => {
+  const player = G.getActivePlayer();
+  const location = G.getActiveLocation();
+  expect(player).toBeUndefined();
+  expect(location).toBeUndefined();
+
+  try {
+    G.setLocationByKey(locA.key);
+  } catch (e) {
+    expect(e.message).toMatch(/No player character set./);
+  }
+});
+
 test("Add characters manually.", () => {
   G.addCharacter(characterA);
   expect(G.getCharacters().length).toBeGreaterThanOrEqual(1);

@@ -103,15 +103,15 @@ class Game implements iGame {
     const from = this.getLocationByKey(this.location);
     const to = this.getLocationByKey(key);
 
+    if (!player) throw Error("No player character set.");
+
     if (!from && to) {
-      //this.location = to.key;
       player.insideKey = to.key;
       return pubsub.publish(events.locationChange, { from, to });
     }
 
     if (to && to.key !== from.key) {
       player.insideKey = to.key;
-      //this.location = to.key;
       return pubsub.publish(events.locationChange, { from, to });
     }
 
