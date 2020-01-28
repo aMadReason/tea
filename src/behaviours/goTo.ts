@@ -1,4 +1,4 @@
-import { iBehaviour } from "../../index";
+import { iBehaviour } from "../index";
 
 const behaviour: iBehaviour = {
   name: "goTo", // assignable to locations

@@ -1,4 +1,4 @@
-import { iBehaviour } from "../../index";
+import { iBehaviour } from "../index";
 
 // reveals more detailed details about the thing
 

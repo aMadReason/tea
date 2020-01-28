@@ -1,4 +1,4 @@
-import { iGame, iThing, iBehaviour, iCommand, gameCommandMethod, iProperties } from "./_types";
+import { iGame, iThing, iBehaviour, gameCommandMethod, iProperties } from "./_types";
 import pubsub from "./modules/pubsub";
 import commandParser from "./modules/commandParser";
 import { ThingMaker, defaultBehaviours, locations, location } from "./index";
@@ -11,7 +11,7 @@ const events = {
 const gCommands = [locations, location];
 
 class Game implements iGame {
-  //location: string = null;
+  log: boolean = false;
   playerKey: string = null;
   things: Array<iThing> = [];
   characters: Array<iThing> = [];
@@ -36,7 +36,7 @@ class Game implements iGame {
     gCommands.map(i => this.gameCommands.set(i.name, i.method));
   }
 
-  get location() {
+  get locationKey() {
     const player = this.getActivePlayer();
     return player ? player.insideKey : null;
   }
@@ -90,7 +90,7 @@ class Game implements iGame {
   }
 
   getActiveLocation() {
-    return this.locations.find(i => i.key === this.location);
+    return this.locations.find(i => i.key === this.locationKey);
   }
 
   getLocationByKey(key = null) {
@@ -100,7 +100,7 @@ class Game implements iGame {
   setLocationByKey(key) {
     const { locations } = this;
     const player = this.getActivePlayer();
-    const from = this.getLocationByKey(this.location);
+    const from = this.getLocationByKey(this.locationKey);
     const to = this.getLocationByKey(key);
 
     if (!player) throw Error("No player character set.");
@@ -143,7 +143,7 @@ class Game implements iGame {
     return this.locations.map(l => l.noun);
   }
 
-  getActiveThings(locationKey = this.location) {
+  getActiveThings(locationKey = this.locationKey) {
     return this.getThingsByInsideKey(locationKey);
   }
 
@@ -191,8 +191,19 @@ class Game implements iGame {
       });
     }
 
-    if (playerKey) {
+    if (playerKey && characters.find(i => i.key === playerKey)) {
       this.setPlayerKey(playerKey);
+    } else {
+      const player = ThingMaker.make(
+        {
+          key: "__default__",
+          noun: "player"
+        },
+        this.behaviourReg,
+        this
+      );
+      this.addCharacter(player);
+      this.setPlayerKey(player.key);
     }
 
     return this;
@@ -206,7 +217,7 @@ class Game implements iGame {
     const locations = this.getLocationsByNoun(nouns[0], described[0]);
     const firstThings = this.getThingsByNoun(nouns[0], described[0]);
     const secondThings = this.getThingsByNoun(nouns[1], described[1]);
-    const iThings = this.getThingsByInsideKey(null);
+    const iThings = this.getThingsByInsideKey(this.playerKey);
     const inventoryThings = this.getThingsByNoun(nouns[0], described[0], iThings);
 
     const tLength = terms.length;
@@ -276,6 +287,8 @@ class Game implements iGame {
       secondThings,
       inventoryThings
     };
+
+    if (this.log) console.log(result);
     return result;
   }
 

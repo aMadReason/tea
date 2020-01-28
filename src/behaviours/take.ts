@@ -1,4 +1,4 @@
-import { iBehaviour } from "../../index";
+import { iBehaviour } from "../index";
 
 const behaviour: iBehaviour = {
   name: "take",
@@ -6,8 +6,9 @@ const behaviour: iBehaviour = {
   methods: {
     take(ins, cmd = null) {
       const key = ins.insideKey;
-      if (key === null) return `${ins.name} is already in your inventory.`;
-      ins.setInsideKey(null);
+      const playerKey = ins.game.playerKey;
+      if (key === playerKey) return `${ins.name} is already in your inventory.`;
+      ins.setInsideKey(playerKey);
 
       const stateKey = ins.getProp("stateKey");
       if (stateKey && stateKey === "initial") {
@@ -17,9 +18,10 @@ const behaviour: iBehaviour = {
       return `${ins.name} added to inventory.`.replace(/^\w/, c => c.toUpperCase());
     },
     drop(ins) {
+      const playerKey = ins.game.playerKey;
       const key = ins.insideKey;
       const loc = ins.game.getActiveLocation();
-      if (key) return `${ins.name} is not in your inventory.`;
+      if (key !== playerKey) return `${ins.name} is not in your inventory.`;
       ins.setInsideKey(loc.key);
 
       const descriptions = ins.getProp("descriptions");

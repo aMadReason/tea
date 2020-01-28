@@ -1,8 +1,16 @@
 import { Game, ThingMaker } from "../src/index.ts";
-import { help, examine, describe, take, goTo, usePortal } from "../src/behaviours/index.ts";
+import {
+  help,
+  examine,
+  describe,
+  take,
+  goTo,
+  usePortal,
+  lookInside
+} from "../src/behaviours/index.ts";
 import { gamedata } from "./gamedata";
 
-const behaviours = [help, examine, describe, take, goTo, usePortal];
+const behaviours = [help, examine, describe, take, goTo, usePortal, lookInside];
 const G = new Game(); // manual tests
 const game = new Game(); // resolve tests
 
@@ -77,4 +85,13 @@ test("Resolve Game Data", () => {
   expect(G.getLocations().length).toBeGreaterThan(1);
   expect(G.getThingsByInsideKey(locA.key).length).toEqual(1);
   expect(G.getThingsByInsideKey(locB.key).length).toEqual(1);
+});
+
+test("Resolve Game Data with No Player", () => {
+  behaviours.map(b => game.registerBehaviour(b));
+  game.resolveGameData({ ...gamedata, playerKey: undefined });
+  expect(G.getLocations().length).toBeGreaterThan(1);
+  expect(G.getThingsByInsideKey(locA.key).length).toEqual(1);
+  expect(G.getThingsByInsideKey(locB.key).length).toEqual(1);
+  expect(G.getActivePlayer()).not.toBeUndefined();
 });

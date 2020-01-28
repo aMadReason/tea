@@ -43,6 +43,7 @@ export interface iCommandMethod {
 }
 
 export interface iGame {
+  log: boolean;
   playerKey: string;
   things: Array<iThing>;
   characters: Array<iThing>;

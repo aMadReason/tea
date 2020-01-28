@@ -1,9 +1,9 @@
 import { gamedata } from "./gamedata";
 import { Game } from "../src/index.ts";
-import { describe, help, examine, goTo, take } from "../src/behaviours/index.ts";
+import { describe, help, examine, goTo, take, lookInside } from "../src/behaviours/index.ts";
 
 const G = new Game();
-G.registerBehaviour([describe, help, examine, gamedata, goTo, take]);
+G.registerBehaviour([describe, help, examine, gamedata, goTo, take, lookInside]);
 G.resolveGameData(gamedata);
 
 test("examine cup", () => {
@@ -72,6 +72,36 @@ test("location", () => {
   G.setLocationByKey("cabin");
   const res = G.command("location").response();
   expect(res).toMatch(/The current location is the cabin./);
+});
+
+test("look inside green book", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("look inside green book").response();
+  expect(res).toMatch(/There is a note inside the green book./);
+});
+
+test("look in green book", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("look in green book").response();
+  expect(res).toMatch(/There is a note in the green book./);
+});
+
+test("look within green book", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("look within green book").response();
+  expect(res).toMatch(/There is a note within the green book./);
+});
+
+test("open green book (assigned action)", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("open green book").response();
+  expect(res).toMatch(/There is a note inside the green book./);
+});
+
+test("look behind green book", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("look behind green book").response();
+  expect(res).toMatch(/There is nothing behind the green book./);
 });
 // test("inventory", () => {
 //   G.setLocationByKey("cabin");

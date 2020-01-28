@@ -15,7 +15,7 @@ abstract class ThingMaker {
 
   static make(data: iThingData, behaviourReg: Map<string, iBehaviour>, game: iGame): iThing {
     const processedData = ThingMaker.preProcess(data);
-    const { noun, described, behaviours, insideKey, key, properties } = processedData;
+    const { noun, described, behaviours, insideKey, key, properties, actions } = processedData;
 
     const thing = new Thing({
       noun,
@@ -33,6 +33,11 @@ abstract class ThingMaker {
       if (behaviour) thing.addBehaviour(behaviour);
       return null;
     });
+
+    // assign custom actions over actions set by behaviours
+    if (actions) {
+      Object.keys(actions).map(k => thing.setAction(k, actions[k]));
+    }
 
     return thing;
   }

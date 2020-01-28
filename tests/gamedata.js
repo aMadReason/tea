@@ -90,14 +90,27 @@ export const gamedata = {
       }
     },
     {
+      key: "green_book",
       noun: "book",
       insideKey: "cabin",
       described: "green book",
-      behaviours: ["take"],
+      behaviours: ["take", "lookInside"],
       properties: {
         filterActionsTo: ["take", "drop", "examine"],
         descriptions: {
           default: "A shabby green book rests haphazardly on the ground."
+        }
+      },
+      actions: { open: "lookInside" }
+    },
+    {
+      noun: "note",
+      insideKey: "green_book",
+      behaviours: ["take"],
+      properties: {
+        filterActionsTo: ["take", "drop", "examine"],
+        descriptions: {
+          default: "A note with the code: 427 written on it."
         }
       }
     },

@@ -28,7 +28,9 @@ const defaultPatterns = {
   "(it)": "Ignore",
   "(light|mix)$": "Noun",
   "^(light|mix|move|shift|pick)": "Verb",
-  "(#Conjunction|above|adjacent|beside|under|over|above|on|over|in|inside)": "Join",
+  "(#Conjunction|above|adjacent|beside|under|over|above|on|over|in|inside|within|behind|undeneath)":
+    "Join",
+  //"(in|inside|within)": "Join",
   "(north|east|south|west|left|right|up|down)": "Direction",
   "#Verb (#Determiner|#Preposition)? #Adjective+ (with|using|on|using|and) (#Determiner|#Preposition)? #Adjective #Noun$":
     "ParserComplexImplicit",
@@ -59,7 +61,8 @@ export default function commandParser(original, patterns = {}) {
     .match("#Noun")
     .out("array");
   let described = doc
-    .not("#Direction|#Join")
+    .not("#Direction")
+    .not("#Join")
     .match("#Adjective+ #Noun")
     .out("array"); // unable to filter valid
   const joins = doc.match("#Join").out("array");

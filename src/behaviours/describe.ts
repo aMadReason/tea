@@ -1,4 +1,4 @@
-import { iBehaviour } from "../../index";
+import { iBehaviour } from "../index";
 // gives brief description of thing depending on its state.
 
 const describe: iBehaviour = {
