@@ -89,16 +89,14 @@ export interface iThing {
   pubsub?: iPubsub | null;
   behaviours?: Array<string>;
   methods: Map<string, behaviourMethod>;
-  properties: Map<string, string | iProperties<string | Array<string> | iProperties<string>>>;
+  properties: Map<string, any>;
   actions: Map<string, string>; // maps verbs to method key
   setInsideKey(key: string): void;
   setProp(
     key: string,
     value: string | iProperties<string | Array<string> | iProperties<string>> | Array<string>
   ): void;
-  getProp(
-    key: string
-  ): undefined | string | Array<string> | iProperties<string | Array<string> | iProperties<string>>;
+  getProp(key: string): any;
   setMethod(key: string, value: behaviourMethod): void;
   hasMethod(key: string): boolean;
   getMethod(key: string, cmd: iCommand | null): behaviourMethod;

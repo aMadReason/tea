@@ -1,9 +1,17 @@
 import { gamedata } from "./gamedata";
 import { Game } from "../src/index.ts";
-import { describe, help, examine, goTo, take, lookInside } from "../src/behaviours/index.ts";
+import {
+  describe,
+  help,
+  examine,
+  goTo,
+  take,
+  lookInside,
+  converse
+} from "../src/behaviours/index.ts";
 
 const G = new Game();
-G.registerBehaviour([describe, help, examine, gamedata, goTo, take, lookInside]);
+G.registerBehaviour([describe, help, examine, gamedata, goTo, take, lookInside, converse]);
 G.resolveGameData(gamedata);
 
 test("examine cup", () => {
@@ -103,19 +111,28 @@ test("look behind green book", () => {
   const res = G.command("look behind green book").response();
   expect(res).toMatch(/There is nothing behind the green book./);
 });
-// test("inventory", () => {
-//   G.setLocationByKey("cabin");
-//   G.command("take cup").response();
-//   const res = G.command("inventory").response();
-//   expect(res).toMatch(/Inventory contains rope./);
-// });
 
-// test("location", () => {
-//   const res = G.command("location").response();
-//   expect(res).toMatch(/You are in the 'cabin'./);
-// });
+test("say hello to Bob", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("say hello to Bob").response();
+  expect(res).toMatch(/Bob: Hello./);
+});
 
-// test("locations", () => {
-//   const res = G.command("locations").response();
-//   expect(res).toMatch(/You are in the 'cabin', and can go to the 'deck'./);
-// });
+test("conditional topic: tell Bob hello", () => {
+  G.setLocationByKey("cabin");
+  G.log = true;
+  const res = G.command("tell Bob hello").response();
+  expect(res).toMatch(/Bob: Hello/);
+});
+
+test("conditional topic: ask Bob about key", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("ask Bob about key").response();
+  expect(res).toMatch(/They don't seem to want to talk about it right now./);
+});
+
+test("conditional topic: tell Bob about key", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("tell Bob about key").response();
+  expect(res).toMatch(/They don't seem to want to talk about it right now./);
+});

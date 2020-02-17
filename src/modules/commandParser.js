@@ -41,7 +41,7 @@ const defaultPatterns = {
 
 export default function commandParser(original, patterns = {}) {
   const words = { ...defaultPatterns, ...patterns };
-  const originalNoStop = original.replace(/\.+$/, ""); // removes full stop
+  const originalNoStop = original.toLowerCase().replace(/\.+$/, ""); // removes full stop
   const doc = nlp(originalNoStop, words)
     .clone()
     .normalize(normalizeRules);
@@ -66,13 +66,6 @@ export default function commandParser(original, patterns = {}) {
     .match("#Adjective+ #Noun")
     .out("array"); // unable to filter valid
   const joins = doc.match("#Join").out("array");
-
-  // additionals
-  // const infinitives = doc
-  //   .verbs()
-  //   .toInfinitive()
-  //   .conjugate()
-  //   .map(i => i.Infinitive);
   const singulars = doc
     .nouns()
     .toSingular()
@@ -92,14 +85,7 @@ export default function commandParser(original, patterns = {}) {
   }
 
   // Commands
-  const input = [
-    verbs[0],
-    described[0] || nouns[0],
-    joins[0] || null,
-    described[1] || nouns[1] || ""
-  ]
-    .filter(i => i)
-    .join(" ");
+  const input = originalNoStop.toLowerCase(); //doc.out("text");
 
   const strictCommand = [
     verbs[0],
@@ -113,7 +99,6 @@ export default function commandParser(original, patterns = {}) {
   return {
     terms,
     tags,
-    //infinitives,
     singulars,
     strictCommand,
     adjectives,

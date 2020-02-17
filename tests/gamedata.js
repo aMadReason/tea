@@ -21,8 +21,30 @@ export const gamedata = {
   characters: [
     {
       key: "peter",
-      noun: "Peter",
+      noun: "peter",
       insideKey: "cabin"
+    },
+    {
+      key: "bob",
+      noun: "bob",
+      insideKey: "cabin",
+      behaviours: ["converse"],
+      properties: {
+        stateKey: "default",
+        conversationResponses: [
+          {
+            verbs: ["say", "tell"],
+            subject: "hello",
+            response: "Hello"
+          },
+          {
+            verbs: ["ask", "tell"],
+            subject: "key",
+            response: "The key can be used to unlock the door.",
+            condition: { prop: "stateKey", operator: "=", value: "discoveredKey" }
+          }
+        ]
+      }
     }
   ],
   things: [
