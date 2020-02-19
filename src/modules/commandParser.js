@@ -22,12 +22,12 @@ const types = [
 ];
 
 const defaultPatterns = {
-  open: "Verb",
-  cup: "Noun",
+  //cup: "Noun",
   golden: "Adjective",
+  //note: "Noun",
   "(it)": "Ignore",
-  "(light|mix)$": "Noun",
-  "^(light|mix|move|shift|pick)": "Verb",
+  "(light|mix|note|cup)$": "Noun",
+  "^(light|mix|move|shift|pick|open)": "Verb",
   "(#Conjunction|above|adjacent|beside|under|over|above|on|over|in|inside|within|behind|undeneath)":
     "Join",
   //"(in|inside|within)": "Join",

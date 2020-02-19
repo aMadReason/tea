@@ -116,7 +116,7 @@ export const gamedata = {
       noun: "book",
       insideKey: "cabin",
       described: "green book",
-      behaviours: ["take", "lookInside"],
+      behaviours: ["take", "lookInside", "takeInside"],
       properties: {
         filterActionsTo: ["take", "drop", "examine"],
         descriptions: {

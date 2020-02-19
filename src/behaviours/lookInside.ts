@@ -26,6 +26,7 @@ const examine: iBehaviour = {
       if (things.length === 1) return `There is a ${things.join(", ")} ${join} the ${ins.name}.`;
 
       const last = things.pop();
+
       return `There is a ${things.join(", a ")} and  a ${last} ${join} the ${ins.name}.`;
     }
   },

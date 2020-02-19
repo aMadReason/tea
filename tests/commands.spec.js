@@ -7,11 +7,25 @@ import {
   goTo,
   take,
   lookInside,
+  takeInside,
   converse
 } from "../src/behaviours/index.ts";
 
 const G = new Game();
-G.registerBehaviour([describe, help, examine, gamedata, goTo, take, lookInside, converse]);
+G.addPatterns({
+  golden: "Adjective"
+});
+G.registerBehaviour([
+  describe,
+  help,
+  examine,
+  gamedata,
+  goTo,
+  take,
+  lookInside,
+  takeInside,
+  converse
+]);
 G.resolveGameData(gamedata);
 
 test("examine cup", () => {
@@ -82,6 +96,30 @@ test("location", () => {
   expect(res).toMatch(/The current location is the cabin./);
 });
 
+test("say hello to Bob", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("say hello to Bob").response();
+  expect(res).toMatch(/Bob: Hello./);
+});
+
+test("conditional topic: tell Bob hello", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("tell Bob hello").response();
+  expect(res).toMatch(/Bob: Hello/);
+});
+
+test("conditional topic: ask Bob about key", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("ask Bob about key").response();
+  expect(res).toMatch(/They don't seem to want to talk about it right now./);
+});
+
+test("conditional topic: tell Bob about key", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("tell Bob about key").response();
+  expect(res).toMatch(/They don't seem to want to talk about it right now./);
+});
+
 test("look inside green book", () => {
   G.setLocationByKey("cabin");
   const res = G.command("look inside green book").response();
@@ -112,27 +150,14 @@ test("look behind green book", () => {
   expect(res).toMatch(/There is nothing behind the green book./);
 });
 
-test("say hello to Bob", () => {
+test("take the note from the green book", () => {
   G.setLocationByKey("cabin");
-  const res = G.command("say hello to Bob").response();
-  expect(res).toMatch(/Bob: Hello./);
+  const res = G.command("take the note from the green book").response();
+  expect(res).toMatch(/The note was moved to inventory./);
 });
 
-test("conditional topic: tell Bob hello", () => {
+test("drop note", () => {
   G.setLocationByKey("cabin");
-  G.log = true;
-  const res = G.command("tell Bob hello").response();
-  expect(res).toMatch(/Bob: Hello/);
-});
-
-test("conditional topic: ask Bob about key", () => {
-  G.setLocationByKey("cabin");
-  const res = G.command("ask Bob about key").response();
-  expect(res).toMatch(/They don't seem to want to talk about it right now./);
-});
-
-test("conditional topic: tell Bob about key", () => {
-  G.setLocationByKey("cabin");
-  const res = G.command("tell Bob about key").response();
-  expect(res).toMatch(/They don't seem to want to talk about it right now./);
+  const res = G.command("drop note").response();
+  expect(res).toMatch(/Note removed from inventory./);
 });

@@ -10,6 +10,7 @@ export { default as goTo } from "./goTo";
 export { default as take } from "./take";
 export { default as usePortal } from "./usePortal";
 export { default as lookInside } from "./lookInside";
+export { default as takeInside } from "./takeInside";
 
 // characters
 export { default as converse } from "./converse";

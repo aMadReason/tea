@@ -77,6 +77,10 @@ class Game implements iGame {
     return this;
   }
 
+  addPatterns(patterns: iProperties<string>) {
+    this.parserPatterns = patterns;
+  }
+
   getCharacters() {
     return [...this.characters];
   }
@@ -146,13 +150,12 @@ class Game implements iGame {
 
   getThingsByNoun(noun, described = undefined, things = this.getActiveThings()) {
     const fThings = things.filter(t => {
-      const isDescribed = t.described === described;
+      const isDescribed = described && t.described === described;
       const isNoun = noun && t.noun === noun;
       if (described && isDescribed && isNoun) return true;
       if (!described && isNoun) return true;
       return false;
     });
-
     return fThings;
   }
 
@@ -208,6 +211,7 @@ class Game implements iGame {
     const secondThings = this.getThingsByNoun(nouns[1], described[1]);
     const iThings = this.getThingsByInsideKey(this.playerKey);
     const inventoryThings = this.getThingsByNoun(nouns[0], described[0], iThings);
+
     const characterThings = this.getThingsByNoun(nouns[0], described[0], this.getCharacters());
 
     const tLength = terms.length;
@@ -225,14 +229,14 @@ class Game implements iGame {
       nav: lLength > 0,
       inventory: verb && iLength > 0 && fLength === 0,
       character: verb && cThings > 0,
-      simple: verb && fLength > 0 && sLength === 0,
-      complex: verb && fLength > 0 && sLength > 0
+      complex: verb && nouns.length >= 2,
+      simple: verb && fLength > 0 && sLength === 0
     };
     type = Object.keys(cmdTypes).find(k => cmdTypes[k] && k) || type;
 
     // then check for errors
     const errTypes = {
-      simpleNoThing: verb && !type && fLength === 0 && nouns.length > 0,
+      simpleNoThing: verb && !type && fLength === 0 && sLength === 0 && nouns.length > 0,
       simpleBadVerb: type === "simple" && fLength === 1 && !firstThings[0].hasAction(verb),
       simpleDuplicate:
         type === "simple" && fLength >= 2 && firstThings[0].noun === firstThings[1].noun
@@ -250,7 +254,6 @@ class Game implements iGame {
       msg.push(`Unable to ${input}.`);
     }
 
-    // const simpleDuplicate =
     if (type === "simpleDuplicate") {
       type = "simpleDuplicate";
       msg.push(
@@ -292,8 +295,10 @@ class Game implements iGame {
       type,
       locations,
       firstThings,
+      secondThings,
       inventoryThings,
       characterThings,
+      described,
       msg,
       input
     } = cmd;
@@ -314,20 +319,31 @@ class Game implements iGame {
         response = locations[0].getAction(verb, cmd);
       }
 
+      if (type === "inventory") {
+        valid = true;
+        response = inventoryThings[0].getAction(verb, cmd);
+      }
+
+      if (type === "character" && characterThings.length > 0) {
+        valid = true;
+        response = characterThings[0].getAction(verb, cmd);
+      }
+
       if (type === "simple" && firstThings.length > 0) {
         valid = true;
         response = firstThings[0].getAction(verb, cmd);
       }
 
-      if (type === "inventory") {
+      if (type === "complex") {
         valid = true;
-        response = inventoryThings[0].getAction(verb, cmd);
-      }
-    }
+        const first = firstThings.find(i => i.described === described[0]);
+        const second = secondThings.find(i => i.described === described[0]);
 
-    if (type === "character" && characterThings.length > 0) {
-      valid = true;
-      response = characterThings[0].getAction(verb, cmd);
+        if (firstThings.length === 0 || secondThings.length > 0) {
+          const thing = first || second;
+          response = thing.getAction(verb, cmd);
+        }
+      }
     }
 
     const res = { ...cmd, valid, response };
