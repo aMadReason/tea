@@ -128,16 +128,20 @@ class Game implements iGame {
     return [...this.locations];
   }
 
-  getThingsByInsideKey(key) {
-    return this.things.filter(i => i.insideKey === key);
+  getThingsByInsideKey(key, things = this.things) {
+    return things.filter(i => i.insideKey === key);
   }
 
   getLocationNouns() {
     return this.locations.map(l => l.noun);
   }
 
-  getActiveThings(locationKey = this.locationKey) {
-    return this.getThingsByInsideKey(locationKey);
+  getAllActiveThings(locationKey = this.locationKey, playerKey = this.playerKey) {
+    return [
+      ...this.getThingsByInsideKey(locationKey),
+      ...this.getThingsByInsideKey(playerKey),
+      ...this.getThingsByInsideKey(locationKey, this.getCharacters())
+    ];
   }
 
   getThingByKey(key, things = this.things) {
@@ -148,7 +152,7 @@ class Game implements iGame {
     return this.things;
   }
 
-  getThingsByNoun(noun, described = undefined, things = this.getActiveThings()) {
+  getThingsByNoun(noun, described = undefined, things = this.getAllActiveThings()) {
     const fThings = things.filter(t => {
       const isDescribed = described && t.described === described;
       const isNoun = noun && t.noun === noun;
@@ -208,18 +212,12 @@ class Game implements iGame {
     const verb = verbs[0];
     const locations = this.getThingsByNoun(nouns[0], described[0], this.getLocations());
     const firstThings = this.getThingsByNoun(nouns[0], described[0]);
-    const secondThings = this.getThingsByNoun(nouns[1], described[1]);
-    const iThings = this.getThingsByInsideKey(this.playerKey);
-    const inventoryThings = this.getThingsByNoun(nouns[0], described[0], iThings);
-
-    const characterThings = this.getThingsByNoun(nouns[0], described[0], this.getCharacters());
+    const secondThings = this.getThingsByNoun(nouns[1], described[1] || described[0]);
 
     const tLength = terms.length;
     const lLength = locations.length;
     const fLength = firstThings.length;
     const sLength = secondThings.length;
-    const iLength = inventoryThings.length;
-    const cThings = characterThings.length;
 
     let type = "";
 
@@ -227,10 +225,8 @@ class Game implements iGame {
     const cmdTypes = {
       gameCommand: tLength === 1 && this.gameCommands.has(input),
       nav: lLength > 0,
-      inventory: verb && iLength > 0 && fLength === 0,
-      character: verb && cThings > 0,
       complex: verb && nouns.length >= 2,
-      simple: verb && fLength > 0 && sLength === 0
+      simple: (verb && (fLength > 0 && sLength === 0)) || (fLength === 0 && sLength > 0)
     };
     type = Object.keys(cmdTypes).find(k => cmdTypes[k] && k) || type;
 
@@ -251,22 +247,13 @@ class Game implements iGame {
 
     if (type === "simpleBadVerb") {
       type = "simpleBadVerb";
-      msg.push(`Unable to ${input}.`);
+      msg.push(`Unknown action, unable to ${input}.`);
     }
 
     if (type === "simpleDuplicate") {
       type = "simpleDuplicate";
       msg.push(
         `Please be more descriptive and reference ${firstThings
-          .map(i => `"${i.described}"`)
-          .join(" or ")}.`
-      );
-    }
-
-    if (inventoryThings.length >= 2) {
-      type = "inventoryDuplicate";
-      msg.push(
-        `Please be more descriptive and reference ${inventoryThings
           .map(i => `"${i.described}"`)
           .join(" or ")}.`
       );
@@ -279,9 +266,7 @@ class Game implements iGame {
       type,
       locations,
       firstThings,
-      secondThings,
-      inventoryThings,
-      characterThings
+      secondThings
     };
 
     if (this.log) console.log(result);
@@ -290,18 +275,7 @@ class Game implements iGame {
 
   command(command, patterns = this.parserPatterns) {
     const cmd = this.parseCommand(command, patterns);
-    const {
-      verb,
-      type,
-      locations,
-      firstThings,
-      secondThings,
-      inventoryThings,
-      characterThings,
-      described,
-      msg,
-      input
-    } = cmd;
+    const { verb, type, locations, firstThings, secondThings, described, nouns, msg, input } = cmd;
     const hasMsg = msg.length > 0;
     let response = () => `Invalid command: ${input}.`;
     let valid = false;
@@ -319,29 +293,19 @@ class Game implements iGame {
         response = locations[0].getAction(verb, cmd);
       }
 
-      if (type === "inventory") {
-        valid = true;
-        response = inventoryThings[0].getAction(verb, cmd);
-      }
-
-      if (type === "character" && characterThings.length > 0) {
-        valid = true;
-        response = characterThings[0].getAction(verb, cmd);
-      }
-
-      if (type === "simple" && firstThings.length > 0) {
+      if (type === "simple") {
         valid = true;
         response = firstThings[0].getAction(verb, cmd);
       }
 
       if (type === "complex") {
         valid = true;
-        const first = firstThings.find(i => i.described === described[0]);
-        const second = secondThings.find(i => i.described === described[0]);
+        const first = firstThings.find(i => described.includes(i.name) || nouns.includes(i.name));
+        const second = secondThings.find(i => described.includes(i.name) || nouns.includes(i.name));
 
-        if (firstThings.length === 0 || secondThings.length > 0) {
+        if (firstThings.length > 0 || secondThings.length > 0) {
           const thing = first || second;
-          response = thing.getAction(verb, cmd);
+          if (thing) response = thing.getAction(verb, cmd);
         }
       }
     }

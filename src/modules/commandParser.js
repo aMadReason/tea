@@ -100,7 +100,7 @@ export default function commandParser(original, patterns = {}) {
     terms,
     tags,
     singulars,
-    strictCommand,
+    //strictCommand,
     adjectives,
     directions,
     type,

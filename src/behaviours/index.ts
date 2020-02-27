@@ -8,9 +8,10 @@ export { default as goTo } from "./goTo";
 
 // things
 export { default as take } from "./take";
+export { default as drop } from "./drop";
 export { default as usePortal } from "./usePortal";
 export { default as lookInside } from "./lookInside";
-export { default as takeInside } from "./takeInside";
+// export { default as takeInside } from "./takeInside";
 
 // characters
 export { default as converse } from "./converse";

@@ -1,16 +1,8 @@
 import { Game, ThingMaker } from "../src/index.ts";
-import {
-  help,
-  examine,
-  describe,
-  take,
-  goTo,
-  usePortal,
-  lookInside
-} from "../src/behaviours/index.ts";
+import { help, examine, describe, take, drop, goTo, usePortal } from "../src/behaviours/index.ts";
 import { gamedata } from "./gamedata";
 
-const behaviours = [help, examine, describe, take, goTo, usePortal, lookInside];
+const behaviours = [help, examine, describe, take, goTo, usePortal, drop];
 const G = new Game(); // manual tests
 const game = new Game(); // resolve tests
 

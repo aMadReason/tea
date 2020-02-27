@@ -1,10 +1,9 @@
 /* global ShadyCSS */
-const css = `
-  
-`;
+const css = ``;
 
 const markup = values => `
   <style>${values.css}</style>
+  <div class="inner">123</div>
 `;
 
 class Component extends HTMLElement {
@@ -30,13 +29,18 @@ class Component extends HTMLElement {
     /* END Style Polyfill Step 2 */
 
     this.dom.appendChild(this.instance);
-
     this._setElements();
     return this;
   }
 
   static get observedAttributes() {
-    return ["data-game"];
+    return [];
+  }
+
+  set game(g) {
+    this.G = g;
+    this.things = this.G.getActiveThings();
+    this.describe();
   }
 
   _setElements() {
@@ -58,8 +62,39 @@ class Component extends HTMLElement {
     return this;
   }
 
-  connectedCallback() {}
-  disconnectedCallback() {}
+  connectedCallback() {
+    this.G = null;
+    this.inner = this.dom.querySelector(".inner");
+    this.addEventListener("click", e => this.handleClick(e));
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener("click", e => this.handleClick(e));
+  }
+
+  handleClick(e) {
+    const target = e.explicitOriginalTarget;
+    const named = target.getAttribute("data-named");
+    const result = this.G.command(`${named} help`);
+    //const res = result.response();
+    console.log(result.response());
+  }
+
+  replaceNouns() {}
+
+  describe() {
+    if (!this.G) return;
+    let description = this.G.getActiveLocation().callMethod("describe");
+    this.things.map(i => {
+      let desc = i.callMethod("describe");
+      desc = desc.replace(
+        i.noun,
+        `<button class="small" data-named="${i.name}">${i.noun}</button>`
+      );
+      return (description = description + desc);
+    });
+    this.inner.innerHTML = description;
+  }
 }
 
 const tag = "tea-scene";

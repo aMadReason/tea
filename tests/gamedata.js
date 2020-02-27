@@ -85,7 +85,7 @@ export const gamedata = {
       noun: "cup",
       insideKey: "cabin",
       described: "golden cup",
-      behaviours: ["take"],
+      behaviours: ["take", "drop"],
       properties: {
         filterActionsTo: [],
         stateKey: "initial",
@@ -103,7 +103,7 @@ export const gamedata = {
       noun: "book",
       insideKey: "cabin",
       described: "red book",
-      behaviours: ["take"],
+      behaviours: ["take", "drop"],
       properties: {
         filterActionsTo: ["take", "drop", "examine"],
         descriptions: {
@@ -116,7 +116,7 @@ export const gamedata = {
       noun: "book",
       insideKey: "cabin",
       described: "green book",
-      behaviours: ["take", "lookInside", "takeInside"],
+      behaviours: ["take", "drop", "lookInside"],
       properties: {
         filterActionsTo: ["take", "drop", "examine"],
         descriptions: {
@@ -128,7 +128,7 @@ export const gamedata = {
     {
       noun: "note",
       insideKey: "green_book",
-      behaviours: ["take"],
+      behaviours: ["take", "drop"],
       properties: {
         filterActionsTo: ["take", "drop", "examine"],
         descriptions: {
@@ -139,7 +139,7 @@ export const gamedata = {
     {
       noun: "rope",
       insideKey: "deck",
-      behaviours: ["take"],
+      behaviours: ["take", "drop"],
       properties: {
         filterActionsTo: ["take", "drop", "examine"],
         stateKey: "initial",
@@ -153,7 +153,7 @@ export const gamedata = {
     {
       noun: "rooope",
       insideKey: "deck",
-      behaviours: ["take"],
+      behaviours: ["take", "drop"],
       properties: {
         filterActionsTo: ["take", "drop", "examine"],
         stateKey: "initial",
