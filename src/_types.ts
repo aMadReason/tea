@@ -72,6 +72,7 @@ export interface iGame {
     described: string | undefined,
     things: Array<iThing>
   ): Array<iThing>;
+  getPlayerKey(): string;
   setLocationByKey(key: string | null): void;
   setPlayerKey(key: string | null): void;
   resolveGameData(iGameData: iGameData): iGame;

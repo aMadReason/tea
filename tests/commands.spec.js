@@ -135,10 +135,10 @@ test("take the note from the green book", () => {
 
 test("drop note in green book", () => {
   G.setLocationByKey("cabin");
-  G.log = true;
-  const res = G.command("drop note in green book").response();
-  G.log = false;
-  expect(res).toMatch(/Unable to drop note in green book./);
+  let res = G.command("drop note in green book").response();
+  expect(res).toMatch(/The note was left in the green book./);
+  res = G.command("drop note in green book").response();
+  expect(res).toMatch(/There is no note in the inventory to leave in the green book./);
 });
 
 test("conditional topic: tell Bob hello", () => {

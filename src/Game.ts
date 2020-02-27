@@ -89,6 +89,10 @@ class Game implements iGame {
     this.playerKey = key;
   }
 
+  getPlayerKey() {
+    return this.playerKey;
+  }
+
   getActivePlayer() {
     return this.characters.find(p => p.key === this.playerKey);
   }

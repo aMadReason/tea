@@ -1,4 +1,5 @@
 import { iBehaviour } from "../index";
+import { nodeInternals } from "stack-utils";
 
 const behaviour: iBehaviour = {
   name: "drop",
@@ -9,22 +10,30 @@ const behaviour: iBehaviour = {
       if (cmd.type === "complex") return behaviour.methods.dropComplex(ins, cmd);
     },
     dropComplex(ins, cmd = null) {
+      const { verb } = cmd;
       const { noun, described } = ins;
       const otherNoun = cmd.nouns.find(i => i !== noun);
       const otherDesc = cmd.described.find(i => i !== described);
-      const inside = ins.game.getThingsByInsideKey(ins.key);
+      const inside = ins.game.getThingsByInsideKey(ins.game.getPlayerKey());
       const targets = ins.game.getThingsByNoun(otherNoun, otherDesc, inside);
       const target = targets[0];
 
-      console.log(inside);
+      if (ins && target && target.insideKey === ins.key) {
+        return `${target.name} is already in the ${ins.name}.`;
+      }
 
-      // if (target) {
-      //   target.setInsideKey(ins.game.playerKey);
-      //   return ins.game.capitalise(`The ${target.name} was moved to inventory.`);
-      // }
+      if (ins && target && target.insideKey !== ins.key) {
+        target.setInsideKey(ins.key);
+        return ins.game.capitalise(`The ${target.name} was left in the ${ins.name}.`);
+      }
 
-      return "";
-      //return behaviour.methods.dropSimple(ins, cmd);
+      if (!target) {
+        return `There is no ${otherDesc || otherNoun} in the inventory to leave in the ${
+          ins.name
+        }.`;
+      }
+
+      return `Unable to ${cmd.verb} the ${otherDesc || otherNoun}.`;
     },
     dropSimple(ins, cmd = null) {
       const playerKey = ins.game.playerKey;

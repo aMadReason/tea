@@ -36,33 +36,10 @@ const behaviour: iBehaviour = {
 
       return `${ins.name} added to inventory.`.replace(/^\w/, c => c.toUpperCase());
     }
-    // drop(ins, cmd = null) {
-    //   const playerKey = ins.game.playerKey;
-    //   const key = ins.insideKey;
-    //   const loc = ins.game.getActiveLocation();
-    //   if (key !== playerKey) return `${ins.name} is not in your inventory.`;
-    //   ins.setInsideKey(loc.key);
-
-    //   const descriptions = ins.getProp("descriptions");
-    //   if (descriptions && descriptions["dropped"]) {
-    //     ins.setProp("stateKey", "dropped");
-    //   }
-
-    //   return `${ins.name} removed from inventory.`.replace(/^\w/, c => c.toUpperCase());
-    // },
-    // dropComplex(ins, cmd = null) {
-    //   return "";
-    // },
-    // dropSimple(ins, cmd = null) {
-    //   return "";
-    // }
   },
   actions: {
     take: "take",
     pick: "take"
-    // drop: "drop",
-    // leave: "drop",
-    // put: "drop"
   }
 };
 
