@@ -1,40 +1,63 @@
 import { iBehaviour } from "../index";
-// gives brief description of thing depending on its state.
+// Basic conversational behaviour
+
+function isMet(propVal: any, operator: string, checkVal: any): boolean {
+  return {
+    "=": propVal === checkVal,
+    ">": propVal > checkVal,
+    "<": propVal < checkVal,
+    ">=": propVal >= checkVal,
+    "<=": propVal <= checkVal,
+    "!=": propVal !== checkVal,
+    includes: propVal && propVal.includes(checkVal)
+  }[operator];
+}
 
 const converse: iBehaviour = {
   name: "converse",
   properties: {
-    conversationResponses: []
+    conversationResponses: [
+      { verbs: ["answer", "say", "ask", "show", "tell"], response: "{name}: ..." }
+      // {
+      //   verbs: ["say", "tell"],
+      //   subject: "hello",
+      //   response: "{name}: Hello."
+      // },
+      // {
+      //   verbs: ["ask", "tell"],
+      //   subject: "key",
+      //   response: "{name}: The key can be used to unlock the door.",
+      //   conditions: [{ prop: "stateKey", operator: "=", value: "discoveredKey" }]
+      // }
+    ]
   },
   methods: {
     converse(ins, cmd = null): string {
       const name = ins.game.capitalise(ins.name);
       const { verb, input } = cmd;
       const responses = ins.getProp("conversationResponses");
-      const responseObj = responses.find(r => r.verbs.includes(verb) && input.includes(r.subject));
+      let resObj = responses.find((r: any) => r.verbs.includes(verb) && input.includes(r.subject));
+      resObj = resObj ? resObj : responses.find((r: any) => r.verbs.includes(verb) && !r.subject);
 
-      if (!responseObj) return `${ins.name} doesn't respond.`;
-      const { condition, response } = responseObj;
-      const { operator, value, prop } = condition || {};
+      let conditionsMet = true;
+      const { conditions = [], response = "" } = resObj;
 
-      const propVal = ins.getProp(prop);
+      conditions.map(
+        (c: any): void => {
+          const { operator, value, prop } = c || {};
+          const propVal = ins.getProp(prop);
+          const met = isMet(propVal, operator, value);
+          conditionsMet = conditionsMet ? met : conditionsMet;
+          return null;
+        }
+      );
 
-      const met = {
-        "=": propVal === value,
-        ">": propVal > value,
-        "<": propVal < value,
-        ">=": propVal >= value,
-        "<=": propVal <= value,
-        "!=": propVal !== value,
-        includes: propVal && propVal.includes(value)
-      }[operator];
-
-      if (met || !condition) return `${name}: ${response}.`;
-
-      return `They don't seem to want to talk about it right now.`;
+      if (conditionsMet) return response.replace("{name}", name);
+      return `There is no response.`;
     }
   },
   actions: {
+    answer: "converse",
     say: "converse",
     ask: "converse",
     show: "converse",

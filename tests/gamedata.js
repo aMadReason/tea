@@ -35,13 +35,13 @@ export const gamedata = {
           {
             verbs: ["say", "tell"],
             subject: "hello",
-            response: "Hello"
+            response: "{name}: Hello."
           },
           {
             verbs: ["ask", "tell"],
             subject: "key",
-            response: "The key can be used to unlock the door.",
-            condition: { prop: "stateKey", operator: "=", value: "discoveredKey" }
+            response: "{name}: The key can be used to unlock the door.",
+            conditions: [{ prop: "stateKey", operator: "=", value: "discoveredKey" }]
           }
         ]
       }

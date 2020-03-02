@@ -7,7 +7,7 @@ bGame.registerBehaviour([describe, help, examine, gamedata, goTo]);
 bGame.resolveGameData(gamedata);
 
 const cup = bGame.getThingsByNoun("cup")[0];
-const deck = bGame.getLocationByKey("deck");
+//const deck = bGame.getLocationByKey("deck");
 const cabin = bGame.getLocationByKey("cabin");
 
 test("Test 'describe' behaviour", () => {

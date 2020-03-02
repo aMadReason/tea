@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "verbose": true,
     "module": "es2015",
     "target": "ES2017",
     "lib": [
       "es6",
       "dom",
-      "es2015"
+      "es2015",
+      "ES2017"
     ],
     "moduleResolution": "node",
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": false,

@@ -1,4 +1,12 @@
-import { iGame, iThing, iBehaviour, gameCommandMethod, iProperties } from "./_types";
+import {
+  iGame,
+  iThing,
+  iBehaviour,
+  gameCommandMethod,
+  iProperties,
+  iGameData,
+  iCommand
+} from "./_types";
 import pubsub from "./modules/pubsub";
 import commandParser from "./modules/commandParser";
 import { ThingMaker, defaultBehaviours, locations, location } from "./index";
@@ -36,7 +44,7 @@ class Game implements iGame {
     gCommands.map(i => this.gameCommands.set(i.name, i.method));
   }
 
-  get locationKey() {
+  get locationKey(): string {
     const player = this.getActivePlayer();
     return player ? player.insideKey : null;
   }
@@ -45,7 +53,7 @@ class Game implements iGame {
     return str.replace(/^\w/, c => c.toUpperCase());
   }
 
-  registerBehaviour(behaviour) {
+  registerBehaviour(behaviour: iBehaviour): iGame {
     if (Array.isArray(behaviour)) {
       behaviour.map(i => this.behaviourReg.set(i.name, i));
     } else {
@@ -54,58 +62,60 @@ class Game implements iGame {
     return this;
   }
 
-  getRegister() {
-    return this.behaviourReg;
-  }
-
-  subscribe(eventName, callback) {
+  subscribe(eventName: string, callback: Function) {
     return pubsub.subscribe(eventName, callback);
   }
 
-  addLocation(thing: iThing) {
+  addLocation(thing: iThing): iGame {
     this.locations.push(thing);
     return this;
   }
 
-  addCharacter(thing: iThing) {
+  addCharacter(thing: iThing): iGame {
     this.characters.push(thing);
     return this;
   }
 
-  addThing(thing: iThing) {
+  addThing(thing: iThing): iGame {
     this.things.push(thing);
     return this;
   }
 
-  addPatterns(patterns: iProperties<string>) {
+  addPatterns(patterns: iProperties<string>): iGame {
     this.parserPatterns = patterns;
+    return this;
   }
 
-  getCharacters() {
-    return [...this.characters];
+  getRegister(): Map<string, iBehaviour> {
+    return this.behaviourReg;
   }
 
-  setPlayerKey(key: string) {
-    this.playerKey = key;
-  }
-
-  getPlayerKey() {
+  getPlayerKey(): string {
     return this.playerKey;
   }
 
-  getActivePlayer() {
+  getCharacters(): Array<iThing> {
+    return [...this.characters];
+  }
+
+  getActivePlayer(): iThing {
     return this.characters.find(p => p.key === this.playerKey);
   }
 
-  getActiveLocation() {
+  getActiveLocation(): iThing {
     return this.locations.find(i => i.key === this.locationKey);
   }
 
-  getLocationByKey(key = null) {
+  getLocationByKey(key: string = null): iThing {
     return this.locations.find(i => i.key === key);
   }
 
-  setLocationByKey(key) {
+  setPlayerKey(key: string): iGame {
+    this.playerKey = key;
+    return this;
+  }
+
+  setLocationByKey(key: string): void {
     const { locations } = this;
     const player = this.getActivePlayer();
     const from = this.getLocationByKey(this.locationKey);
@@ -124,23 +134,27 @@ class Game implements iGame {
     }
 
     if (!to && locations.length > 0) {
-      return (player.insideKey = locations[0].key);
+      player.insideKey = locations[0].key;
+      return;
     }
   }
 
-  getLocations() {
+  getLocations(): Array<iThing> {
     return [...this.locations];
   }
 
-  getThingsByInsideKey(key, things = this.things) {
+  getThingsByInsideKey(key: string, things: Array<iThing> = this.things): Array<iThing> {
     return things.filter(i => i.insideKey === key);
   }
 
-  getLocationNouns() {
+  getLocationNouns(): Array<string> {
     return this.locations.map(l => l.noun);
   }
 
-  getAllActiveThings(locationKey = this.locationKey, playerKey = this.playerKey) {
+  getAllActiveThings(
+    locationKey: string = this.locationKey,
+    playerKey: string = this.playerKey
+  ): Array<iThing> {
     return [
       ...this.getThingsByInsideKey(locationKey),
       ...this.getThingsByInsideKey(playerKey),
@@ -148,15 +162,19 @@ class Game implements iGame {
     ];
   }
 
-  getThingByKey(key, things = this.things) {
+  getThingByKey(key: string, things = this.things): iThing {
     return things.find(i => i.key === key);
   }
 
-  getThings(): iThing[] {
+  getThings(): Array<iThing> {
     return this.things;
   }
 
-  getThingsByNoun(noun, described = undefined, things = this.getAllActiveThings()) {
+  getThingsByNoun(
+    noun: string,
+    described: string = undefined,
+    things: Array<iThing> = this.getAllActiveThings()
+  ): Array<iThing> {
     const fThings = things.filter(t => {
       const isDescribed = described && t.described === described;
       const isNoun = noun && t.noun === noun;
@@ -167,7 +185,7 @@ class Game implements iGame {
     return fThings;
   }
 
-  resolveGameData(data) {
+  resolveGameData(data: iGameData) {
     const { locations, things, characters, playerKey = null } = data;
 
     if (Array.isArray(locations)) {
@@ -209,7 +227,7 @@ class Game implements iGame {
     return this;
   }
 
-  parseCommand(cmd: string, patterns = this.parserPatterns) {
+  parseCommand(cmd: string, patterns: any = this.parserPatterns): iCommand {
     const msg = [];
     const parserResult = commandParser(cmd.toLocaleLowerCase(), patterns);
     const { nouns, verbs, described, input, terms } = parserResult;
@@ -277,11 +295,11 @@ class Game implements iGame {
     return result;
   }
 
-  command(command, patterns = this.parserPatterns) {
+  command(command: string, patterns: any = this.parserPatterns): iCommand {
     const cmd = this.parseCommand(command, patterns);
     const { verb, type, locations, firstThings, secondThings, described, nouns, msg, input } = cmd;
     const hasMsg = msg.length > 0;
-    let response = () => `Invalid command: ${input}.`;
+    let response: Function = () => `Invalid command: ${input}.`;
     let valid = false;
 
     if (hasMsg) {

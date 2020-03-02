@@ -9,9 +9,9 @@
     "start": "tsc --watch"
   },
   "dependencies": {
-    "@babel/core": "7.7.7",
-    "compromise": "12.2.1",
-    "jest": "24.9.0"
+    "@babel/core": "7.8.6",
+    "compromise": "13.1.1",
+    "jest": "25.1.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.7.7",

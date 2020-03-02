@@ -13,4 +13,5 @@ const gameCommand: iCommandMethod = {
   }
 };
 
+Object.freeze(gameCommand);
 export default gameCommand;

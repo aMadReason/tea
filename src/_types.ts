@@ -12,7 +12,7 @@ export interface iCommand {
   terms: Array<string>;
   tags: Array<any>;
   singulars: Array<string>;
-  strictCommand: string;
+  //strictCommand: string;
   adjectives: Array<string>;
   directions: Array<string>;
   type: string | boolean;
@@ -24,6 +24,7 @@ export interface iCommand {
   verb?: string;
   locations?: Array<iThing>;
   firstThings?: Array<iThing>;
+  secondThings?: Array<iThing>;
   inventoryThings?: Array<iThing>;
   msg?: Array<string>;
 }
@@ -32,7 +33,7 @@ export type behaviourMethod = (t: iThing, cmd?: iCommand) => string;
 export interface iBehaviour {
   name: string;
   methods: iProperties<behaviourMethod>;
-  properties: iProperties<string | Array<string> | iProperties<string>>;
+  properties: iProperties<any>;
   actions: iProperties<string>; // maps verbs to method key
 }
 
@@ -76,8 +77,8 @@ export interface iGame {
   setLocationByKey(key: string | null): void;
   setPlayerKey(key: string | null): void;
   resolveGameData(iGameData: iGameData): iGame;
-  parseCommand(cmd: string, patterns: iCommand);
-  command(cmd: string, patterns: iCommand);
+  parseCommand(cmd: string, patterns: iCommand): iCommand;
+  command(cmd: string, patterns: iCommand): iCommand;
 }
 
 export interface iThing {
@@ -104,7 +105,7 @@ export interface iThing {
   callMethod(key: string, cmd: iCommand | null): string;
   setAction(key: string, value: string): void;
   hasAction(key: string): boolean;
-  getAction(key: string, cmd?: iCommand | null): () => string;
+  getAction(key: string, cmd?: iCommand | null): behaviourMethod;
   getActionKeys(): Array<string>;
   addBehaviour(behaviour: iBehaviour): void;
 }
@@ -123,5 +124,6 @@ export interface iThingData {
 export interface iGameData {
   playerKey?: string;
   locations: Array<iThingData>;
+  characters: Array<iThingData>;
   things: Array<iThingData>;
 }

@@ -150,11 +150,17 @@ test("conditional topic: tell Bob hello", () => {
 test("conditional topic: ask Bob about key", () => {
   G.setLocationByKey("cabin");
   const res = G.command("ask Bob about key").response();
-  expect(res).toMatch(/They don't seem to want to talk about it right now./);
+  expect(res).toMatch(/There is no response./);
 });
 
 test("conditional topic: tell Bob about key", () => {
   G.setLocationByKey("cabin");
   const res = G.command("tell Bob about key").response();
-  expect(res).toMatch(/They don't seem to want to talk about it right now./);
+  expect(res).toMatch(/There is no response./);
+});
+
+test("conditional topic: answer yes to bob", () => {
+  G.setLocationByKey("cabin");
+  const res = G.command("answer yes to bob").response();
+  expect(res).toMatch(/Bob: .../);
 });
