@@ -5,15 +5,16 @@ import {
   gameCommandMethod,
   iProperties,
   iGameData,
-  iCommand
+  iCommand,
+  iPubsub
 } from "./_types";
-import pubsub from "./modules/pubsub";
+import { pubsub } from "./modules/pubsub";
 import commandParser from "./modules/commandParser";
 import { ThingMaker, defaultBehaviours, locations, location } from "./index";
 
 const events = {
-  locationChange: "tea-location-change",
-  commandCall: "tea-command"
+  locationChange: "location-change",
+  commandCall: "command"
 };
 
 const gCommands = [locations, location];
@@ -27,6 +28,7 @@ class Game implements iGame {
   behaviourReg: Map<string, iBehaviour> = new Map();
   parserPatterns: Object;
   gameCommands: Map<string, gameCommandMethod> = new Map();
+  pubsub: iPubsub;
 
   constructor(
     things: Array<iThing> = [],
@@ -39,6 +41,7 @@ class Game implements iGame {
     this.things = things;
     this.characters = characters;
     this.parserPatterns = patterns;
+    this.pubsub = pubsub();
     //add default behaviours
     defaultBehaviours.map(b => this.registerBehaviour(b));
     gCommands.map(i => this.gameCommands.set(i.name, i.method));
@@ -63,7 +66,7 @@ class Game implements iGame {
   }
 
   subscribe(eventName: string, callback: Function) {
-    return pubsub.subscribe(eventName, callback);
+    return this.pubsub.subscribe(eventName, (data: any) => callback(data));
   }
 
   addLocation(thing: iThing): iGame {
@@ -116,27 +119,29 @@ class Game implements iGame {
   }
 
   setLocationByKey(key: string): void {
-    const { locations } = this;
+    //const { locations } = this;
     const player = this.getActivePlayer();
     const from = this.getLocationByKey(this.locationKey);
     const to = this.getLocationByKey(key);
 
+    //console.log(123);
+
     if (!player) throw Error("No player character set.");
 
-    if (!from && to) {
-      player.insideKey = to.key;
-      return pubsub.publish(events.locationChange, { from, to });
-    }
+    // if (!from && to) {
+    //   player.insideKey = to.key;
+    //   return pubsub.publish(events.locationChange, { from, to });
+    // }
 
     if (to && to.key !== from.key) {
       player.insideKey = to.key;
-      return pubsub.publish(events.locationChange, { from, to });
+      return this.pubsub.publish(events.locationChange, { from, to });
     }
 
-    if (!to && locations.length > 0) {
-      player.insideKey = locations[0].key;
-      return;
-    }
+    // if (!to && locations.length > 0) {
+    //   player.insideKey = locations[0].key;
+    //   return;
+    // }
   }
 
   getLocations(): Array<iThing> {
@@ -333,7 +338,7 @@ class Game implements iGame {
     }
 
     const res = { ...cmd, valid, response };
-    pubsub.publish(events.commandCall, res);
+    this.pubsub.publish(events.commandCall, res);
     return res;
   }
 }
