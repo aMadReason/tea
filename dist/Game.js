@@ -1,9 +1,9 @@
-import pubsub from "./modules/pubsub";
+import { pubsub } from "./modules/pubsub";
 import commandParser from "./modules/commandParser";
 import { ThingMaker, defaultBehaviours, locations, location } from "./index";
 const events = {
-    locationChange: "tea-location-change",
-    commandCall: "tea-command"
+    locationChange: "location-change",
+    commandCall: "command"
 };
 const gCommands = [locations, location];
 class Game {
@@ -20,6 +20,7 @@ class Game {
         this.things = things;
         this.characters = characters;
         this.parserPatterns = patterns;
+        this.pubsub = pubsub();
         defaultBehaviours.map(b => this.registerBehaviour(b));
         gCommands.map(i => this.gameCommands.set(i.name, i.method));
     }
@@ -40,7 +41,7 @@ class Game {
         return this;
     }
     subscribe(eventName, callback) {
-        return pubsub.subscribe(eventName, callback);
+        return this.pubsub.subscribe(eventName, (data) => callback(data));
     }
     addLocation(thing) {
         this.locations.push(thing);
@@ -81,23 +82,14 @@ class Game {
         return this;
     }
     setLocationByKey(key) {
-        const { locations } = this;
         const player = this.getActivePlayer();
         const from = this.getLocationByKey(this.locationKey);
         const to = this.getLocationByKey(key);
         if (!player)
             throw Error("No player character set.");
-        if (!from && to) {
-            player.insideKey = to.key;
-            return pubsub.publish(events.locationChange, { from, to });
-        }
         if (to && to.key !== from.key) {
             player.insideKey = to.key;
-            return pubsub.publish(events.locationChange, { from, to });
-        }
-        if (!to && locations.length > 0) {
-            player.insideKey = locations[0].key;
-            return;
+            return this.pubsub.publish(events.locationChange, { from, to });
         }
     }
     getLocations() {
@@ -250,7 +242,7 @@ class Game {
             }
         }
         const res = Object.assign(Object.assign({}, cmd), { valid, response });
-        pubsub.publish(events.commandCall, res);
+        this.pubsub.publish(events.commandCall, res);
         return res;
     }
 }
