@@ -8,7 +8,7 @@ import {
   iCommand,
   iPubsub
 } from "./_types";
-import { pubsub } from "./modules/pubsub";
+import pubsub from "./modules/pubsub";
 import commandParser from "./modules/commandParser";
 import { ThingMaker, defaultBehaviours, locations, location } from "./index";
 
@@ -41,7 +41,7 @@ class Game implements iGame {
     this.things = things;
     this.characters = characters;
     this.parserPatterns = patterns;
-    this.pubsub = pubsub();
+    this.pubsub = pubsub;
     //add default behaviours
     defaultBehaviours.map(b => this.registerBehaviour(b));
     gCommands.map(i => this.gameCommands.set(i.name, i.method));

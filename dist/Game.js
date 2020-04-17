@@ -1,4 +1,4 @@
-import { pubsub } from "./modules/pubsub";
+import pubsub from "./modules/pubsub";
 import commandParser from "./modules/commandParser";
 import { ThingMaker, defaultBehaviours, locations, location } from "./index";
 const events = {
@@ -20,7 +20,7 @@ class Game {
         this.things = things;
         this.characters = characters;
         this.parserPatterns = patterns;
-        this.pubsub = pubsub();
+        this.pubsub = pubsub;
         defaultBehaviours.map(b => this.registerBehaviour(b));
         gCommands.map(i => this.gameCommands.set(i.name, i.method));
     }

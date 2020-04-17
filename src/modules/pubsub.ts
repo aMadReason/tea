@@ -1,8 +1,12 @@
-const pubsub = {
+import { iPubsub } from '../_types';
+
+const pubsub: iPubsub = {
   subs: new Map(),
   publish(event: string, data: any): void {
     if (!this.subs[event]) return;
-    this.subs[event].forEach(subCallback => subCallback(data));
+    this.subs[event].forEach((subCallback: Function) => {
+      if(typeof subCallback === 'function') subCallback(data)
+    });
   },
   subscribe(event: string, callback: Function) {
     if (!this.subs[event]) this.subs[event] = [];
