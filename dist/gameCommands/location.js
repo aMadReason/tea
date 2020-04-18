@@ -2,7 +2,10 @@ const gameCommand = {
     name: "location",
     method: (g, cmd = null) => {
         const loc = g.getActiveLocation();
-        return `The current location is the ${loc.name}.`;
+        const player = g.getActivePlayer();
+        if (loc)
+            return `The current location is the ${loc.name}.`;
+        return `Active location '${player.insideKey}' doesn't exist in game.`;
     }
 };
 Object.freeze(gameCommand);
