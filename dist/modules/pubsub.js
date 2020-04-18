@@ -1,12 +1,9 @@
 const pubsub = {
-    subs: new Map(),
+    subs: new Map() || {},
     publish(event, data) {
         if (!this.subs[event])
             return;
-        this.subs[event].forEach((subCallback) => {
-            if (typeof subCallback === 'function')
-                subCallback(data);
-        });
+        this.subs[event].forEach(subCallback => subCallback(data));
     },
     subscribe(event, callback) {
         if (!this.subs[event])

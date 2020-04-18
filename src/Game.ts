@@ -5,8 +5,7 @@ import {
   gameCommandMethod,
   iProperties,
   iGameData,
-  iCommand,
-  iPubsub
+  iCommand
 } from "./_types";
 import pubsub from "./modules/pubsub";
 import commandParser from "./modules/commandParser";
@@ -28,7 +27,7 @@ class Game implements iGame {
   behaviourReg: Map<string, iBehaviour> = new Map();
   parserPatterns: Object;
   gameCommands: Map<string, gameCommandMethod> = new Map();
-  pubsub: iPubsub;
+  pubsub: any;
 
   constructor(
     things: Array<iThing> = [],

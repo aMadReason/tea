@@ -2,11 +2,11 @@ export interface iProperties<T> {
   [propName: string]: T;
 }
 
-export interface iPubsub {
-  subs: Map<string, Function>;
-  subscribe: Function;
-  publish: Function;
-}
+// export interface iPubsub {
+//   subs: Map<string, Function>;
+//   subscribe: Function;
+//   publish: Function;
+// }
 
 export interface iCommand {
   terms: Array<string>;
@@ -51,7 +51,7 @@ export interface iGame {
   locations: Array<iThing>;
   behaviourReg: Map<string, iBehaviour>;
   gameCommands?: Map<string, gameCommandMethod>;
-  pubsub: iPubsub;
+  pubsub: any;
   capitalise(str: string): string;
   registerBehaviour(behaviour: iBehaviour | Array<iBehaviour>): void;
   getRegister(): Map<string, iBehaviour>;
@@ -89,7 +89,7 @@ export interface iThing {
   insideKey: string | null;
   name: string;
   game?: iGame | null;
-  pubsub?: iPubsub | null;
+  pubsub?: any | null;
   behaviours?: Array<string>;
   methods: Map<string, behaviourMethod>;
   properties: Map<string, any>;
