@@ -1,16 +1,15 @@
 const behaviour = {
     name: "help",
     properties: {
-        filterActionsTo: [],
-        excludeActionsTo: []
+        hideActions: [],
     },
     methods: {
         help(ins, cmd = null) {
-            const allowedActs = ins.getProp("filterActionsTo");
+            const hidden = ins.getProp("hideActions");
             const first = `The ${ins.name} has the following actions available;`;
             let acts = [...ins.getActionKeys()];
-            if (allowedActs && Array.isArray(allowedActs) && allowedActs.length > 0) {
-                acts = acts.filter(i => allowedActs.indexOf(i) > -1);
+            if (hidden && Array.isArray(hidden) && hidden.length > 0) {
+                acts = acts.filter(i => !hidden.includes(i));
             }
             if (acts.length === 0 || !acts)
                 return `${ins.name} has no actions available`;
