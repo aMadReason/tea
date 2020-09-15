@@ -100,6 +100,10 @@ class Game implements iGame {
     return [...this.characters];
   }
 
+  getCharacterkeys() {
+    return this.characters.map(i => i.key);
+  }
+
   getActivePlayer(): iThing {
     return this.characters.find(p => p.key === this.playerKey);
   }
@@ -113,7 +117,9 @@ class Game implements iGame {
   }
 
   setPlayerKey(key: string): iGame {
+    const characters = this.getCharacters()
     this.playerKey = key;
+    
     return this;
   }
 
@@ -162,7 +168,7 @@ class Game implements iGame {
     return [
       ...this.getThingsByInsideKey(locationKey),
       ...this.getThingsByInsideKey(playerKey),
-      ...this.getThingsByInsideKey(locationKey, this.getCharacters())
+      ...this.getThingsByInsideKey(locationKey, this.characters)
     ];
   }
 

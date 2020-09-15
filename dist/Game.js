@@ -68,6 +68,9 @@ class Game {
     getCharacters() {
         return [...this.characters];
     }
+    getCharacterkeys() {
+        return this.characters.map(i => i.key);
+    }
     getActivePlayer() {
         return this.characters.find(p => p.key === this.playerKey);
     }
@@ -78,6 +81,7 @@ class Game {
         return this.locations.find(i => i.key === key);
     }
     setPlayerKey(key) {
+        const characters = this.getCharacters();
         this.playerKey = key;
         return this;
     }
@@ -105,7 +109,7 @@ class Game {
         return [
             ...this.getThingsByInsideKey(locationKey),
             ...this.getThingsByInsideKey(playerKey),
-            ...this.getThingsByInsideKey(locationKey, this.getCharacters())
+            ...this.getThingsByInsideKey(locationKey, this.characters)
         ];
     }
     getThingByKey(key, things = this.things) {
